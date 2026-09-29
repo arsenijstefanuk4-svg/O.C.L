@@ -1,0 +1,173 @@
+/* ===== Загрузочный экран ===== */
+let timeLeft = 5;
+const timerElement = document.getElementById('loadTimer');
+const loaderText = document.getElementById('loaderText');
+const loaderBell = document.getElementById('loaderBell');
+const loaderFight = document.getElementById('loaderFight');
+const loaderStages = ["ПОДГОТОВКА АРЕНЫ U.C.L...", "СЕКУНДАНТЫ ГОТОВЯТ УГЛЫ РИНГА...", "СУДЬЯ ПРОВЕРЯЕТ ПЕРЧАТКИ...", "ПОСЛЕДНИЕ ИНСТРУКЦИИ БОЙЦАМ..."];
+
+const countdown = setInterval(() => {
+    timeLeft--;
+    if (timeLeft > 0) {
+        timerElement.textContent = `Загрузка: ${timeLeft} сек`;
+        loaderText.textContent = loaderStages[(5 - timeLeft) % loaderStages.length];
+    } else {
+        clearInterval(countdown);
+        timerElement.textContent = `Гонг!`;
+        loaderBell.classList.add('ding');
+        loaderText.textContent = "РИНГ ГОТОВ";
+        loaderFight.classList.add('show');
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.visibility = 'hidden', 500);
+        }, 450);
+    }
+}, 1000);
+
+/* ===== Статус арены (МСК) ===== */
+function checkArenaStatus() {
+    const now = new Date();
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const msk = new Date(utc + (3600000 * 3));
+    const hours = msk.getHours();
+
+    const dot = document.getElementById('radarDot');
+    const text = document.getElementById('radarText');
+
+    if (dot && text) {
+        if (hours >= 12 && hours < 22) {
+            dot.className = 'radar-dot open';
+            text.textContent = 'Арена открыта (12:00 - 22:00 МСК)';
+            text.style.color = '#00e676';
+        } else {
+            dot.className = 'radar-dot closed';
+            text.textContent = 'Арена закрыта (Открытие в 12:00 МСК)';
+            text.style.color = 'var(--red)';
+        }
+    }
+}
+checkArenaStatus();
+setInterval(checkArenaStatus, 30000);
+
+/* ===== Поиск ===== */
+function searchRules() {
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+    const items = document.querySelectorAll('.searchable');
+    items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(query) ? "" : "none";
+    });
+}
+
+/* ===== Копирование правила ===== */
+function copyCardText(card) {
+    const title = card.querySelector('.card-title') ? card.querySelector('.card-title').innerText : 'Бан стиль';
+    const desc = card.querySelector('.card-desc') ? card.querySelector('.card-desc').innerText : card.innerText;
+    const textToCopy = `📌 [U.C.L Rule] ${title}: ${desc}`;
+
+    card.classList.remove('punch');
+    void card.offsetWidth;
+    card.classList.add('punch');
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+    }).catch(() => {});
+}
+
+/* ===== Фоновые "искры" ===== */
+function spawnParticles() {
+    const wrap = document.getElementById('particles');
+    if (!wrap) return;
+    const symbols = ['🥊', '⭐', '💥', '🔥'];
+    for (let i = 0; i < 8; i++) {
+        const el = document.createElement('div');
+        el.className = 'p-ember';
+        el.textContent = symbols[i % symbols.length];
+        el.style.left = (Math.random() * 96 + 2) + '%';
+        el.style.setProperty('--drift', (Math.random() * 40 - 20) + 'px');
+        el.style.animationDuration = (16 + Math.random() * 12) + 's';
+        el.style.animationDelay = (Math.random() * 14) + 's';
+        el.style.fontSize = (0.75 + Math.random() * 0.85) + 'rem';
+        wrap.appendChild(el);
+    }
+}
+spawnParticles();
+
+/* ===== Управление настройками и темами ===== */
+function toggleSettings(force) {
+    const dropdown = document.getElementById('settingsDropdown');
+    if (dropdown) {
+        if (typeof force === 'boolean') {
+            dropdown.style.display = force ? 'block' : 'none';
+        } else {
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+    }
+}
+
+const themeClasses = ['theme-gold', 'theme-cyan', 'theme-red', 'theme-purple', 'theme-green', 'theme-orange', 'theme-blue', 'theme-pink', 'theme-custom'];
+
+function clearInlineTheme() {
+    document.body.style.removeProperty('--gold');
+    document.body.style.removeProperty('--gold-glow');
+    document.body.style.removeProperty('--border-grid');
+}
+
+function setTheme(themeName, element) {
+    clearInlineTheme();
+    themeClasses.forEach(t => document.body.classList.remove(t));
+    document.body.classList.add(themeName);
+    document.querySelectorAll('.dot-btn').forEach(btn => btn.classList.remove('active'));
+    if (element) element.classList.add('active');
+    localStorage.setItem('ucl_theme', themeName);
+    localStorage.removeItem('ucl_custom_color');
+}
+
+function hexToRgb(hex) {
+    const m = /^#?([a-f\d]{3}|[a-f\d]{6})$/i.exec(hex.trim());
+    if (!m) return null;
+    let h = m[1];
+    if (h.length === 3) {
+        h = h.split('').map(c => c + c).join('');
+    }
+    const num = parseInt(h, 16);
+    return `${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}`;
+}
+
+function applyCustomColor(hex) {
+    const rgb = hexToRgb(hex);
+    if (!rgb) return;
+    
+    document.body.style.setProperty('--gold', hex);
+    document.body.style.setProperty('--gold-glow', `rgba(${rgb}, 0.35)`);
+    document.body.style.setProperty('--border-grid', `rgba(${rgb}, 0.15)`);
+    
+    themeClasses.forEach(t => document.body.classList.remove(t));
+    document.body.classList.add('theme-custom');
+    
+    document.querySelectorAll('.dot-btn').forEach(btn => btn.classList.remove('active'));
+    
+    const hexInput = document.getElementById('customHex');
+    if (hexInput) hexInput.value = hex;
+    const swatch = document.getElementById('customSwatch');
+    if (swatch) swatch.value = hex;
+
+    localStorage.setItem('ucl_custom_color', hex);
+}
+
+function onHexTyped(val) {
+    if (/^#[0-9A-Fa-f]{6}$/.test(val.trim())) {
+        applyCustomColor(val.trim());
+    }
+}
+
+function toggleMotion(enabled) {
+    if (enabled) {
+        document.body.classList.remove('reduce-motion');
+    } else {
+        document.body.classList.add('reduce-motion');
+    }
+}
