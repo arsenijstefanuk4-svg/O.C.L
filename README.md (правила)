@@ -1,331 +1,595 @@
-<main class="container">
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O.C.L — Ouroboros Community League Arena</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #030407;
+            --bg-card: rgba(13, 16, 28, 0.72);
+            --gold: #ffb703;
+            --gold-glow: rgba(255, 183, 3, 0.5);
+            --gold-r: 255; --gold-g: 183; --gold-b: 3;
+            --red: #ff2a4b;
+            --red-glow: rgba(255, 42, 75, 0.5);
+            --cyan: #00f2fe;
+            --text-main: #f0f4f8;
+            --text-sub: #98a2b8;
+            --border-grid: rgba(255, 183, 3, 0.15);
+            --canvas-tan: #7a5a3a;
+        }
 
-    <!-- 1. Пассив -->
-    <section id="pd">
-        <div class="section-header">
-            <div class="header-line"></div>
-            <h2>1. Пассив</h2>
+        /* Динамические темы подсветки */
+        body.theme-gold    { --gold: #ffb703; --gold-glow: rgba(255, 183, 3, 0.5);  --border-grid: rgba(255, 183, 3, 0.15); --gold-r:255; --gold-g:183; --gold-b:3; }
+        body.theme-cyan     { --gold: #00f2fe; --gold-glow: rgba(0, 242, 254, 0.5);  --border-grid: rgba(0, 242, 254, 0.15); --gold-r:0; --gold-g:242; --gold-b:254; }
+        body.theme-red       { --gold: #ff2a4b; --gold-glow: rgba(255, 42, 75, 0.5);  --border-grid: rgba(255, 42, 75, 0.15); --gold-r:255; --gold-g:42; --gold-b:75; }
+        body.theme-purple   { --gold: #c026d3; --gold-glow: rgba(192, 38, 211, 0.5); --border-grid: rgba(192, 38, 211, 0.15); --gold-r:192; --gold-g:38; --gold-b:211; }
+        body.theme-green    { --gold: #00e676; --gold-glow: rgba(0, 230, 118, 0.5);  --border-grid: rgba(0, 230, 118, 0.15); --gold-r:0; --gold-g:230; --gold-b:118; }
+        body.theme-orange   { --gold: #ff6d00; --gold-glow: rgba(255, 109, 0, 0.5);  --border-grid: rgba(255, 109, 0, 0.15); --gold-r:255; --gold-g:109; --gold-b:0; }
+        body.theme-blue     { --gold: #2979ff; --gold-glow: rgba(41, 121, 255, 0.5); --border-grid: rgba(41, 121, 255, 0.15); --gold-r:41; --gold-g:121; --gold-b:255; }
+        body.theme-pink     { --gold: #ff4dab; --gold-glow: rgba(255, 77, 171, 0.5); --border-grid: rgba(255, 77, 171, 0.15); --gold-r:255; --gold-g:77; --gold-b:171; }
+        body.theme-custom   { }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.55;
+            overflow-x: hidden;
+            position: relative;
+            background-image:
+                radial-gradient(ellipse 70% 45% at 50% -5%, var(--gold-glow) 0%, transparent 60%),
+                radial-gradient(ellipse 55% 40% at 105% 105%, rgba(255, 42, 75, 0.14) 0%, transparent 55%),
+                radial-gradient(ellipse 40% 30% at -5% 60%, rgba(0, 242, 254, 0.06) 0%, transparent 60%),
+                linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 42px 42px, 42px 42px;
+            transition: background-image 0.5s ease;
+        }
+
+        body::after {
+            content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+            background: radial-gradient(ellipse 90% 80% at 50% 45%, transparent 55%, rgba(0,0,0,0.55) 100%);
+        }
+
+        body.no-motion *,
+        body.no-motion *::before,
+        body.no-motion *::after {
+            animation: none !important;
+            transition: none !important;
+            scroll-behavior: auto !important;
+        }
+
+        #progress-bar {
+            position: fixed; top: 0; left: 0; height: 3px;
+            background: linear-gradient(90deg, var(--red), var(--gold), var(--cyan));
+            width: 0%; z-index: 10000;
+            box-shadow: 0 0 14px var(--gold-glow);
+            transition: width 0.12s ease-out;
+        }
+
+        .ring-decor { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+        .canvas-floor {
+            position: absolute; left: 0; right: 0; bottom: 0; height: 45vh;
+            background: radial-gradient(ellipse 90% 100% at 50% 100%, rgba(122, 90, 58, 0.10) 0%, transparent 70%);
+            opacity: 0.8;
+        }
+
+        .ring-ropes-top, .ring-ropes-bottom {
+            position: fixed; left: 0; width: 100%; height: 18px; z-index: 1;
+            display: flex; flex-direction: column; justify-content: space-between;
+            opacity: 0.55;
+            backface-visibility: hidden; transform: translateZ(0);
+        }
+        .ring-ropes-top { top: 0; }
+        .ring-ropes-bottom { bottom: 0; transform: rotate(180deg) translateZ(0); }
+        .rope-line { height: 3px; width: 100%; border-radius: 3px; }
+        .rope-line.r1 { background: linear-gradient(90deg, var(--red), transparent, var(--red)); box-shadow: 0 0 8px var(--red-glow); }
+        .rope-line.r2 { background: linear-gradient(90deg, var(--text-main), transparent, var(--text-main)); opacity: 0.3; }
+        .rope-line.r3 { background: linear-gradient(90deg, var(--gold), transparent, var(--gold)); box-shadow: 0 0 8px var(--gold-glow); }
+
+        .spotlight-sweep {
+            position: fixed; top: -30%; left: -20%; width: 55%; height: 160%; z-index: 0;
+            background: radial-gradient(ellipse at center, var(--gold-glow) 0%, transparent 65%);
+            opacity: 0.14; filter: blur(14px);
+            animation: sweepLight 20s ease-in-out infinite;
+            will-change: transform;
+        }
+        @keyframes sweepLight {
+            0%, 100% { transform: translateX(0) rotate(-8deg); }
+            50% { transform: translateX(150vw) rotate(8deg); }
+        }
+
+        .corner-glow { position: fixed; width: 280px; height: 280px; border-radius: 50%; z-index: 0; filter: blur(70px); opacity: 0.22; animation: cornerPulse 7s ease-in-out infinite; will-change: transform, opacity; }
+        .corner-glow.cg-tl { top: -90px; left: -90px; background: var(--red); }
+        .corner-glow.cg-br { bottom: -90px; right: -90px; background: var(--gold); animation-delay: 3.2s; }
+        @keyframes cornerPulse { 0%, 100% { opacity: 0.14; transform: scale(1); } 50% { opacity: 0.28; transform: scale(1.12); } }
+
+        .floating-particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        .p-ember {
+            position: absolute; bottom: -5%; font-size: 1.1rem; opacity: 0;
+            animation: emberRise linear infinite; color: var(--gold); filter: drop-shadow(0 0 6px var(--gold-glow));
+            will-change: transform, opacity;
+        }
+        @keyframes emberRise {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; }
+            50% { transform: translateY(-52vh) translateX(var(--drift, 12px)) rotate(180deg); }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-102vh) translateX(0) rotate(360deg); opacity: 0; }
+        }
+
+        /* Сообщество Оглавление / Баннер в шапке */
+        .ocl-social-banner {
+            display: flex; gap: 12px; justify-content: center; align-items: center; margin: 15px auto; flex-wrap: wrap; z-index: 3; position: relative;
+        }
+        .ocl-btn {
+            background: rgba(13, 16, 28, 0.85); border: 1.5px solid var(--gold); color: var(--gold);
+            padding: 8px 18px; border-radius: 30px; font-weight: 800; font-size: 0.85rem; text-decoration: none;
+            display: flex; align-items: center; gap: 8px; box-shadow: 0 0 15px var(--gold-glow); transition: 0.3s;
+        }
+        .ocl-btn:hover { background: var(--gold); color: #000; transform: translateY(-3px); box-shadow: 0 6px 20px var(--gold-glow); }
+
+        /* Панель настроек кастомизации */
+        .customizer-panel { position: fixed; top: 15px; right: 15px; z-index: 9999; }
+        .settings-toggle-btn {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(13, 16, 28, 0.92); border: 1.5px solid var(--gold);
+            color: var(--gold); font-size: 1.25rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 16px var(--gold-glow);
+            transition: 0.3s ease;
+        }
+        .settings-toggle-btn:hover { transform: rotate(90deg) scale(1.08); }
+
+        .settings-dropdown {
+            position: absolute; top: 54px; right: 0; width: 270px;
+            background: rgba(11, 13, 24, 0.97); border: 1px solid var(--border-grid);
+            border-radius: 16px; backdrop-filter: blur(16px);
+            box-shadow: 0 14px 40px rgba(0,0,0,0.65);
+            opacity: 0; visibility: hidden; transform: translateY(-10px) scale(0.97);
+            transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+            max-height: 80vh; overflow-y: auto;
+        }
+        .settings-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+
+        .settings-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border-grid); }
+        .settings-head strong { font-family: 'Teko', sans-serif; font-size: 1.25rem; letter-spacing: 1px; color: var(--gold); text-transform: uppercase; }
+        .settings-close { background: none; border: none; color: var(--text-sub); font-size: 1.1rem; cursor: pointer; padding: 2px 6px; border-radius: 6px; transition: 0.2s; }
+        .settings-close:hover { color: #fff; background: rgba(255,255,255,0.06); }
+
+        .settings-body { padding: 14px 16px 16px; }
+        .settings-row { display: flex; flex-direction: column; gap: 9px; margin-bottom: 16px; }
+        .settings-row span.label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; color: var(--text-sub); letter-spacing: 1.2px; }
+
+        .color-dots { display: flex; gap: 9px; flex-wrap: wrap; }
+        .dot-btn { width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: 0.2s; }
+        .dot-btn:hover { transform: scale(1.18); }
+        .dot-btn.active { border-color: #fff; transform: scale(1.14); box-shadow: 0 0 10px currentColor; }
+        .dot-gold { background: #ffb703; } .dot-cyan { background: #00f2fe; } .dot-red { background: #ff2a4b; }
+        .dot-purple { background: #c026d3; } .dot-green { background: #00e676; } .dot-orange { background: #ff6d00; }
+        .dot-blue { background: #2979ff; } .dot-pink { background: #ff4dab; }
+
+        .custom-color-row { display: flex; align-items: center; gap: 8px; }
+        .swatch-native { -webkit-appearance: none; appearance: none; width: 34px; height: 34px; border: 2px solid rgba(255,255,255,0.15); border-radius: 9px; cursor: pointer; background: none; padding: 0; }
+        .hex-input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border-grid); border-radius: 8px; padding: 8px 10px; color: #fff; font-size: 0.82rem; font-weight: 700; font-family: 'Montserrat', monospace; outline: none; }
+        .hex-hint { font-size: 0.68rem; color: var(--text-sub); margin-top: 1px; }
+
+        .toggle-row { display: flex; align-items: center; justify-content: space-between; }
+        .switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider-track { position: absolute; cursor: pointer; inset: 0; background: rgba(148,163,184,0.25); border-radius: 24px; transition: 0.3s; }
+        .slider-track::before { content: ""; position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: 0.3s; }
+        .switch input:checked + .slider-track { background: var(--gold); box-shadow: 0 0 10px var(--gold-glow); }
+        .switch input:checked + .slider-track::before { transform: translateX(20px); }
+
+        /* Прелоадер */
+        #loader {
+            position: fixed; inset: 0; background: #020203; z-index: 99999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s; overflow: hidden;
+        }
+        .loader-round { font-family: 'Teko', sans-serif; font-size: 1.1rem; letter-spacing: 4px; color: var(--red); text-transform: uppercase; margin-bottom: 6px; text-shadow: 0 0 10px var(--red-glow); }
+        .punch-stage { position: relative; width: 220px; height: 160px; display: flex; align-items: center; justify-content: center; }
+        .heavy-bag { font-size: 4.5rem; position: relative; z-index: 1; transform-origin: top center; animation: bagSwing 0.6s ease-in-out infinite alternate; }
+        .glove-left, .glove-right { position: absolute; font-size: 3rem; z-index: 2; top: 35px; }
+        .glove-left { left: 0; animation: punchLeft 0.6s ease-in-out infinite; }
+        .glove-right { right: 0; transform: scaleX(-1); animation: punchRight 0.6s ease-in-out infinite 0.3s; }
+        @keyframes bagSwing { 0% { transform: rotate(-8deg); } 100% { transform: rotate(8deg); } }
+        @keyframes punchLeft { 0%, 100% { transform: translateX(0) rotate(-10deg); } 50% { transform: translateX(55px) rotate(15deg); } }
+        @keyframes punchRight { 0%, 100% { transform: scaleX(-1) translateX(0) rotate(-10deg); } 50% { transform: scaleX(-1) translateX(55px) rotate(15deg); } }
+        .loader-text { font-family: 'Teko', sans-serif; font-size: 2.2rem; letter-spacing: 3px; color: var(--gold); margin-top: 14px; text-shadow: 0 0 15px var(--gold-glow); text-align: center; }
+        .loader-fight { font-family: 'Teko', sans-serif; font-size: 4rem; letter-spacing: 6px; color: var(--red); text-shadow: 0 0 30px var(--red-glow); opacity: 0; transform: scale(0.6); }
+        .loader-fight.show { animation: fightFlash 0.6s ease forwards; }
+        @keyframes fightFlash { 0% { opacity: 0; transform: scale(0.4) rotate(-5deg); } 60% { opacity: 1; transform: scale(1.15) rotate(2deg); } 100% { opacity: 1; transform: scale(1) rotate(0); } }
+
+        .marquee-wrapper {
+            background: linear-gradient(90deg, #100003, var(--red), var(--gold), #100003);
+            color: #ffffff; font-weight: 900; font-size: 0.95rem; text-transform: uppercase;
+            letter-spacing: 2px; padding: 12px 0; overflow: hidden; white-space: nowrap;
+            width: 100vw; position: relative; left: 50%; transform: translateX(-50%);
+            display: flex; border-bottom: 1px solid var(--gold); box-shadow: 0 4px 20px rgba(0,0,0,0.9); z-index: 2;
+        }
+        .marquee-content { display: flex; flex-shrink: 0; white-space: nowrap; animation: marquee 16s linear infinite; }
+        .marquee-item { padding-right: 50px; }
+        @keyframes marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
+
+        .status-container { display: flex; justify-content: center; margin-top: 25px; position: relative; z-index: 2; }
+        .status-badge {
+            display: flex; align-items: center; gap: 10px; background: rgba(15, 18, 32, 0.85);
+            border: 1px solid var(--gold); padding: 8px 18px; border-radius: 50px; box-shadow: 0 0 20px var(--gold-glow); backdrop-filter: blur(12px);
+        }
+        .radar-dot { width: 10px; height: 10px; border-radius: 50%; animation: dotPulse 1.6s ease-in-out infinite; }
+        @keyframes dotPulse { 0%, 100% { box-shadow: 0 0 6px currentColor; } 50% { box-shadow: 0 0 16px currentColor; } }
+        .radar-dot.open { background: #00e676; color: #00e676; }
+        .radar-dot.closed { background: var(--red); color: var(--red); }
+
+        header { text-align: center; padding: 20px 15px; position: relative; z-index: 2; }
+        .main-badge {
+            display: inline-block; background: linear-gradient(45deg, var(--red), #ff5252); color: #fff;
+            font-family: 'Teko', sans-serif; font-size: 1.3rem; font-weight: 700; padding: 2px 16px;
+            border-radius: 4px; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 15px var(--red-glow);
+            transform: skewX(-8deg); margin-bottom: 12px;
+        }
+
+        h1 { font-family: 'Teko', sans-serif; font-size: 3.6rem; line-height: 0.95; text-transform: uppercase; letter-spacing: 2px; }
+        h1 span { color: var(--gold); text-shadow: 0 0 20px var(--gold-glow); }
+
+        .search-wrapper { width: 100%; max-width: 650px; margin: 20px auto 0; padding: 0 10px; }
+        .search-input {
+            width: 100%; background: rgba(15, 18, 32, 0.9); border: 2px solid var(--border-grid);
+            padding: 14px 20px; border-radius: 14px; color: #fff; font-size: 1rem; font-weight: 600; outline: none; transition: 0.3s;
+        }
+        .search-input:focus { border-color: var(--gold); box-shadow: 0 0 25px var(--gold-glow); }
+
+        .nav-scroller { display: flex; gap: 10px; overflow-x: auto; padding: 20px 10px 10px; scrollbar-width: none; justify-content: center; flex-wrap: wrap; }
+        .nav-link {
+            background: rgba(20, 25, 45, 0.7); border: 1px solid var(--border-grid); color: var(--text-sub);
+            padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; text-decoration: none;
+            text-transform: uppercase; transition: 0.2s ease;
+        }
+        .nav-link:hover, .nav-link.active-link { border-color: var(--gold); color: #fff; background: rgba(255,255,255,0.05); transform: translateY(-2px); }
+
+        .container { width: 100%; max-width: 1250px; margin: 30px auto; padding: 0 15px; position: relative; z-index: 2; }
+        section { margin-bottom: 45px; }
+
+        .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; border-bottom: 2px solid var(--border-grid); padding-bottom: 8px; }
+        .section-header h2 { font-family: 'Teko', sans-serif; font-size: 2.3rem; text-transform: uppercase; letter-spacing: 1px; }
+        .header-line { height: 5px; width: 25px; background: var(--gold); box-shadow: 0 0 12px var(--gold-glow); border-radius: 2px; }
+
+        .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        .rule-card {
+            background: var(--bg-card); border: 1px solid var(--border-grid); border-radius: 16px; padding: 22px;
+            backdrop-filter: blur(16px); display: flex; flex-direction: column; justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; position: relative; overflow: hidden;
+        }
+        .rule-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--gold), transparent 70%); opacity: 0.7; }
+        .rule-card:hover { transform: translateY(-6px) scale(1.012); border-color: var(--gold); box-shadow: 0 12px 32px var(--gold-glow); }
+        .rule-card.danger-card { border-color: rgba(255, 42, 75, 0.3); }
+        .rule-card.danger-card::before { background: linear-gradient(90deg, var(--red), transparent 70%); }
+
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; gap: 10px; }
+        .card-title { font-size: 1.1rem; font-weight: 800; line-height: 1.3; }
+
+        .badge-penalty { font-size: 0.7rem; font-weight: 900; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; white-space: nowrap; }
+        .badge-penalty.warn { background: rgba(255, 183, 3, 0.15); color: var(--gold); border: 1px solid var(--gold); }
+        .badge-penalty.danger { background: rgba(255, 42, 75, 0.15); color: var(--red); border: 1px solid var(--red); }
+        .badge-penalty.info { background: rgba(0, 242, 254, 0.15); color: var(--cyan); border: 1px solid var(--cyan); }
+
+        .card-desc { color: var(--text-sub); font-size: 0.92rem; }
+        .card-desc strong { color: #fff; }
+
+        .bans-flex { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+        .ban-box {
+            background: rgba(255, 42, 75, 0.06); border: 1px solid rgba(255, 42, 75, 0.25); border-radius: 10px;
+            padding: 14px 8px; text-align: center; font-weight: 800; color: #ff6b81; font-size: 0.85rem; transition: 0.3s;
+        }
+        .ban-box:hover { background: rgba(255, 42, 75, 0.2); transform: translateY(-4px) scale(1.05); box-shadow: 0 5px 15px rgba(255,42,75,0.3); }
+
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: var(--gold); color: #000; padding: 10px 24px; border-radius: 30px; font-weight: 800;
+            font-size: 0.85rem; box-shadow: 0 0 20px var(--gold-glow); opacity: 0; transition: all 0.3s ease; z-index: 10000;
+        }
+        #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        footer { text-align: center; padding: 30px 15px; border-top: 1px solid var(--border-grid); color: var(--text-sub); font-size: 0.85rem; position: relative; z-index: 2; }
+        footer span { color: var(--gold); font-weight: 800; }
+    </style>
+</head>
+<body class="theme-gold">
+
+    <div class="ring-decor" aria-hidden="true">
+        <div class="canvas-floor"></div>
+        <div class="ring-ropes-top"><div class="rope-line r1"></div><div class="rope-line r2"></div><div class="rope-line r3"></div></div>
+        <div class="ring-ropes-bottom"><div class="rope-line r1"></div><div class="rope-line r2"></div><div class="rope-line r3"></div></div>
+        <div class="spotlight-sweep"></div>
+        <div class="corner-glow cg-tl"></div>
+        <div class="corner-glow cg-br"></div>
+        <div class="floating-particles" id="particles"></div>
+    </div>
+
+    <!-- Настройки -->
+    <div class="customizer-panel">
+        <button class="settings-toggle-btn" onclick="toggleSettings()" title="Настройки">⚙</button>
+        <div class="settings-dropdown" id="settingsDropdown">
+            <div class="settings-head">
+                <strong>Настройки</strong>
+                <button class="settings-close" onclick="toggleSettings(false)">✕</button>
+            </div>
+            <div class="settings-body">
+                <div class="settings-row">
+                    <span class="label">Подсветка</span>
+                    <div class="color-dots">
+                        <div class="dot-btn dot-gold active" onclick="setTheme('theme-gold', this)"></div>
+                        <div class="dot-btn dot-cyan" onclick="setTheme('theme-cyan', this)"></div>
+                        <div class="dot-btn dot-red" onclick="setTheme('theme-red', this)"></div>
+                        <div class="dot-btn dot-purple" onclick="setTheme('theme-purple', this)"></div>
+                        <div class="dot-btn dot-green" onclick="setTheme('theme-green', this)"></div>
+                        <div class="dot-btn dot-orange" onclick="setTheme('theme-orange', this)"></div>
+                        <div class="dot-btn dot-blue" onclick="setTheme('theme-blue', this)"></div>
+                        <div class="dot-btn dot-pink" onclick="setTheme('theme-pink', this)"></div>
+                    </div>
+                </div>
+                <div class="settings-row">
+                    <span class="label">Свой цвет</span>
+                    <div class="custom-color-row">
+                        <input type="color" class="swatch-native" id="customSwatch" value="#ffb703" oninput="applyCustomColor(this.value)">
+                        <input type="text" class="hex-input" id="customHex" value="#ffb703" maxlength="7" oninput="onHexTyped(this.value)">
+                    </div>
+                    <span class="hex-hint" id="hexHint">Введите HEX-код</span>
+                </div>
+                <div class="settings-row toggle-row">
+                    <span class="label">Анимации</span>
+                    <label class="switch">
+                        <input type="checkbox" id="motionToggle" checked onchange="toggleMotion(this.checked)">
+                        <span class="slider-track"></span>
+                    </label>
+                </div>
+            </div>
         </div>
-        <div class="rules-grid">
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
+    </div>
+
+    <div id="loader">
+        <div class="loader-round">Выход на ринг O.C.L</div>
+        <div class="punch-stage">
+            <div class="glove-left">🥊</div>
+            <div class="heavy-bag">🥊</div>
+            <div class="glove-right">🥊</div>
+        </div>
+        <div class="loader-text" id="loaderText">ПОДГОТОВКА АРЕНЫ O.C.L...</div>
+        <div class="loader-fight" id="loaderFight">БОЙ!</div>
+    </div>
+
+    <div id="progress-bar"></div>
+    <div id="toast">Правило скопировано в буфер!</div>
+
+    <div class="marquee-wrapper">
+        <div class="marquee-content">
+            <span class="marquee-item">⚡ OUROBOROS COMMUNITY LEAGUE (O.C.L) • ОФИЦИАЛЬНЫЙ РЕГЛАМЕНТ • СОБЛЮДАЙТЕ ПРАВИЛА ЛИГИ • ⚡</span>
+            <span class="marquee-item">⚡ OUROBOROS COMMUNITY LEAGUE (O.C.L) • ОФИЦИАЛЬНЫЙ РЕГЛАМЕНТ • СОБЛЮДАЙТЕ ПРАВИЛА ЛИГИ • ⚡</span>
+        </div>
+    </div>
+
+    <header>
+        <div class="status-container">
+            <div class="status-badge">
+                <div id="radarDot" class="radar-dot"></div>
+                <span id="radarText" style="font-weight:800; font-size:0.8rem; text-transform:uppercase;">Проверка арены...</span>
+            </div>
+        </div>
+
+        <!-- Реклама/Ссылки на сообщество -->
+        <div class="ocl-social-banner">
+            <a href="https://t.me/OCLleague" target="_blank" class="ocl-btn">📢 Telegram Канал O.C.L</a>
+            <a href="https://t.me/OCLleagechat" target="_blank" class="ocl-btn">💬 Telegram Чат Лиги</a>
+        </div>
+
+        <div style="margin-top:15px;">
+            <div class="main-badge">Ouroboros Community League</div>
+            <h1>Правила боёв <span>O.C.L</span></h1>
+        </div>
+
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" class="search-input" placeholder="⚡ Поиск правил (пассив, багоюз, слоуклики, демпси...)" oninput="searchRules()">
+        </div>
+
+        <div class="nav-scroller">
+            <a href="#pd" class="nav-link">1. Пассив</a>
+            <a href="#bugs" class="nav-link">2. Багоюз</a>
+            <a href="#combos" class="nav-link">3. Слоуклики</a>
+            <a href="#skating" class="nav-link">4. Скейтинг и БД</a>
+            <a href="#dd" class="nav-link">5. Дабл деш</a>
+            <a href="#ref" class="nav-link">6. Реферство</a>
+            <a href="#combat" class="nav-link">7. Проведение боев</a>
+            <a href="#bans" class="nav-link">8. Бан стили</a>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section id="pd">
+            <div class="section-header"><div class="header-line"></div><h2>1. Пассив</h2></div>
+            <div class="rules-grid">
+                <div class="rule-card searchable" onclick="copyCardText(this)">
                     <div class="card-title">ПД Фишинг</div>
                     <span class="badge-penalty info">Определение</span>
+                    <div class="card-desc">Это когда игрок намеренно перестает бить/взаимодействовать, чтобы сделать идеальное уклонение.<br><br>Если вас ловят на стагеринге или вы ничего не можете сделать кроме уклона, вы можете выждать момент и сделать два уклона против спамящих комбо.</div>
                 </div>
-                <div class="card-desc">
-                    ПД Фишинг — это когда игрок намеренно перестает бить/взаимодействовать, чтобы сделать идеальное уклонение.<br><br>
-                    Если вас ловят на стагеринге или вы ничего не можете сделать кроме уклона, то можете выждать момент и сделать два уклона если по вам делают спамящие комбо (особенно касается медленных стилей).
-                </div>
-            </div>
-
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
+                <div class="rule-card searchable" onclick="copyCardText(this)">
                     <div class="card-title">Таймеры и Ограничения</div>
-                    <span class="badge-penalty warn">ТКО за 2 фола</span>
-                </div>
-                <div class="card-desc">
-                    ТКО даётся за 2 фола.<br><br>
-                    Ждать удара можно максимум <strong>3 секунды</strong>, вы можете выйти за рамки времени и будет предупреждение, но при злоупотреблении — фол.
+                    <span class="badge-penalty warn">Предупреждение / Фол</span>
+                    <div class="card-desc">Ждать удара можно максимум <strong>3 секунды</strong>. Превышение лимита влечет предупреждение, при злоупотреблении — фол. За пассив в конце боя ради ульты дается сразу **2 фола**.</div>
                 </div>
             </div>
+        </section>
 
-            <div class="rule-card danger-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Сброс таймера, Эмоции и Стамина</div>
-                    <span class="badge-penalty danger">Важно</span>
-                </div>
-                <div class="card-desc">
-                    Попытка удара и получение контрудара сбрасывают таймер порога ПД фиша (таймер 3 секунды). Также атака и способности, возвращающие бойцов в нейтральное положение, сбрасывают таймер.<br><br>
-                    Использование эмоций приравнивается к бездействию (кроме начала раунда).<br><br>
-                    Пдфишить можно, когда у бойца <strong>полностью</strong> закончилась стамина.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 2. Багоюз -->
-    <section id="bugs">
-        <div class="section-header">
-            <div class="header-line"></div>
-            <h2>2. Багоюз</h2>
-        </div>
-        <div class="rules-grid">
-            <div class="rule-card danger-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
+        <section id="bugs">
+            <div class="section-header"><div class="header-line"></div><h2>2. Багоюз</h2></div>
+            <div class="rules-grid">
+                <div class="rule-card danger-card searchable" onclick="copyCardText(this)">
                     <div class="card-title">Парирование ульты</div>
-                    <span class="badge-penalty danger">Вылет из реальной жизни</span>
+                    <span class="badge-penalty danger">Строго карается</span>
+                    <div class="card-desc">Если в вас летит ульта и вы прожимаете блок в тайминг, сжирая её: если ульта решающая для боя — дается ТКО. Если нет — 1.5 фола.</div>
                 </div>
-                <div class="card-desc">
-                    Когда в вас летит ульта и вас должны пробить, а вы в тайминг прожимаете блок и ульта сжирается (при намеренном использовании будет вылет из реальной жизни).
-                </div>
-            </div>
-
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
+                <div class="rule-card searchable" onclick="copyCardText(this)">
                     <div class="card-title">Нелегальный стаггеринг</div>
                     <span class="badge-penalty warn">Предупреждение ➔ Фол</span>
-                </div>
-                <div class="card-desc">
-                    Это когда удар M1 все еще регистрируется в серии, но задерживается и становится неуклоняемым, притягивая игрока обратно вопреки уклонению и кадрам — нарушение.<br><br>
-                    Первое нарушение влечет устное предупреждение, последующие — фол.
+                    <div class="card-desc">Задержка удара M1, становящегося неуклоняемым и притягивающего игрока обратно. Первое нарушение — устное предупреждение, далее — фол.</div>
                 </div>
             </div>
+        </section>
 
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Разрешенный стаггеринг</div>
-                    <span class="badge-penalty info">Разрешено</span>
-                </div>
-                <div class="card-desc">
-                    Стаггеринг (тыкать М1 при попытке перебить атаку противника) с целью смены темпа или миксапов разрешен.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 3. Медленные комбо М1 -->
-    <section id="combos">
-        <div class="section-header">
-            <div class="header-line"></div>
-            <h2>3. Медленные комбо М1 (слоу клики)</h2>
-        </div>
-        <div class="rules-grid">
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
+        <section id="combos">
+            <div class="section-header"><div class="header-line"></div><h2>3. Слоуклики</h2></div>
+            <div class="rules-grid">
+                <div class="rule-card searchable" onclick="copyCardText(this)">
                     <div class="card-title">Правила применения</div>
                     <span class="badge-penalty warn">Фол при нарушении</span>
-                </div>
-                <div class="card-desc">
-                    Медленные удары M1 разрешены только после того, как игрок попал под ультимейт. Их нельзя использовать после способностей (Focus, Stampede и т. д.). Игрокам разрешено использовать медленные M1 только для <strong>ОДНОЙ СЕРИИ УДАРОВ</strong>, большее количество приведет к фолу.
+                    <div class="card-desc">Медленные удары M1 разрешены только после того, как игрок попал под ультимейт. Нельзя использовать после абилок (Вращение Демпси, Stampede). Разрешена только <strong>одна серия ударов</strong>.<br><br><strong>Исключения:</strong> стиль крюк (corkscrew) — слоуклики после ульты запрещены; Iron Fist — разрешено 2 комбо слоу-клика.</div>
                 </div>
             </div>
+        </section>
 
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Исключения для стилей</div>
-                    <span class="badge-penalty info">Исключения</span>
-                </div>
-                <div class="card-desc">
-                    <strong>ИСКЛЮЧЕНИЕ:</strong> нельзя использовать стиль крюк (corkscrew) слоу клики после ультимейта.<br><br>
-                    После ультимейта айрон фиста можно делать <strong>ДВА КОМБО СЛОУ КЛИКА</strong>.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 4. С-кейтинг и бекдеши -->
-    <section id="skating">
-        <div class="section-header">
-            <div class="header-line"></div>
-            <h2>4. С-кейтинг и бекдеши</h2>
-        </div>
-        <div class="rules-grid">
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">С-кейтинг</div>
+        <section id="skating">
+            <div class="section-header"><div class="header-line"></div><h2>4. Скейтинг и БД (Бекдеш)</h2></div>
+            <div class="rules-grid">
+                <div class="rule-card searchable" onclick="copyCardText(this)">
+                    <div class="card-title">Правила отхода назад</div>
                     <span class="badge-penalty warn">Фол</span>
-                </div>
-                <div class="card-desc">
-                    С-кейтинг — уход назад от противника зажатием кнопки S (направление джойстика назад). Можно использовать после попадания удара или комбо по сопернику. Если вы идете назад и ничего не делаете, пропуская два действия противника — фол. Аналогично с бекдешом.
+                    <div class="card-desc">С-кейтинг можно использовать после попадания удара/комбо по сопернику. Если вы идете назад бездействуя, пропуская действия соперника — фол.<br><br>Против Демпси фишить можно, но отходить назад (скейтить) нельзя. Против шотгана бекдеш разрешен только под способность.</div>
                 </div>
             </div>
+        </section>
 
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Обоюдный кайтанг</div>
-                    <span class="badge-penalty warn">Фол обоим</span>
-                </div>
-                <div class="card-desc">
-                    Если оба игрока намеренно держатся на расстоянии, включается 3-секундный счёт после 3-секундного счёта порога ПД. Если никто не приближается — фол обоим.
+        <section id="dd">
+            <div class="section-header"><div class="header-line"></div><h2>5. Дабл деш</h2></div>
+            <div class="rules-grid">
+                <div class="rule-card searchable" onclick="copyCardText(this)">
+                    <div class="card-title">Регламент дешей</div>
+                    <span class="badge-penalty warn">Штрафы за трипл-деш</span>
+                    <div class="card-desc">ДД запрещен от финта, от обычных ударов разрешен. Трипл-деш и более запрещен в любой форме (карается 1–2 фолами).</div>
                 </div>
             </div>
+        </section>
 
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Против Демпси и Шотгана</div>
-                    <span class="badge-penalty info">Особые условия</span>
-                </div>
-                <div class="card-desc">
-                    Против демпси можно фишить, но нельзя уходить назад (С-кейтить).<br><br>
-                    Против шотгана можно использовать бекдеш на способность, если вы до этого сделали бекдеш.
+        <section id="ref">
+            <div class="section-header"><div class="header-line"></div><h2>6. Реферство</h2></div>
+            <div class="rules-grid">
+                <div class="rule-card searchable" onclick="copyCardText(this)">
+                    <div class="card-title">Этика и съемка боев</div>
+                    <span class="badge-penalty info">Контроль</span>
+                    <div class="card-desc">Рефери обязан вести себя адекватно, не оскорблять бойцов и не превышать полномочия (требовать деньги за бой). Каждый рефери обязан вести видеосъемку поединка для урегулирования спорных моментов.</div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- 5. ДД (дабл деш) -->
-    <section id="dd">
-        <div class="section-header">
-            <div class="header-line"></div>
-            <h2>5. ДД (дабл деш)</h2>
-        </div>
-        <div class="rules-grid">
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Правила дешей</div>
-                    <span class="badge-penalty info">Свободно / Трипл деш</span>
-                </div>
-                <div class="card-desc">
-                    Используйте как хотите.<br><br>
-                    Трипл деш карается <strong>1 фолом</strong>.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 6. Звуки / Изображения -->
-    <section id="audio">
-        <div class="section-header">
-            <div class="header-line"></div>
-            <h2>6. Пользовательские звуки / изображения</h2>
-        </div>
-        <div class="rules-grid">
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Общие правила</div>
-                    <span class="badge-penalty warn">Предупреждение</span>
-                </div>
-                <div class="card-desc">
-                    Использование неприятных или раздражающих звуковых эффектов и изображений может отвлекать игроков во время игры; несоблюдение приведет к предупреждению.
-                </div>
-            </div>
-
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Звуки ПД (Идеальное уклонение)</div>
-                    <span class="badge-penalty info">На усмотрение</span>
-                </div>
-                <div class="card-desc">
-                    Пользовательские звуковые эффекты идеального уклонения (ПД) остаются на усмотрение игроков, но может быть запрошено их удаление во избежание отвлечения внимания.
-                </div>
-            </div>
-
-            <div class="rule-card danger-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Контрудары и Ульта</div>
-                    <span class="badge-penalty danger">Строго запрещено / Разрешено</span>
-                </div>
-                <div class="card-desc">
-                    Пользовательские звуковые эффекты контрударов (каунтер), а также изображения строго запрещены и должны быть удалены для официальных матчей.<br><br>
-                    Пользовательские звуковые эффекты и изображения ультимативных способностей (ульта) разрешены.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 7. Титульные бои -->
-    <section id="title">
-        <div class="section-header">
-            <div class="header-line"></div>
-            <h2>7. Титульные бои</h2>
-        </div>
-        <div class="rules-grid">
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Формат боев и оценивание</div>
-                    <span class="badge-penalty info">Формат bo3</span>
-                </div>
-                <div class="card-desc">
-                    Проводятся в формате bo3 (3 боя). Игрок может сменить стиль только после поражения; победитель должен сохранять текущий стиль до проигрыша. Правила такие же, как в обычных боях.<br><br>
-                    За боем будет наблюдать <strong>один рефери высшей категории</strong>, который будет следить за поединком.<br><br>
-                    Каждый бой (не раунд) счётчик фолов будет аннулироваться. В зависимости от количества фолов рефери может поменять итог боя.
-                </div>
-            </div>
-
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Защита титулов</div>
-                    <span class="badge-penalty info">Сроки защиты</span>
-                </div>
-                <div class="card-desc">
-                    • <strong>ЗАЩИТА ТИТУЛА ЧЕМПИОНА В UNF:</strong> КАЖДАЯ НЕДЕЛЯ<br><br>
-                    • <strong>ЗАЩИТА ТИТУЛА ЧЕМПИОНА UNC:</strong> КАЖДЫЕ 2 НЕДЕЛИ<br><br>
-                    • <strong>ЗАЩИТА ТИТУЛА ЧЕМПИОНА UCL:</strong> КАЖДЫЕ 2.5 НЕДЕЛИ
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 8. Регламент боев -->
-    <section id="combat">
-        <div class="section-header">
-            <div class="header-line"></div>
-            <h2>8. Правила проведения боев U.C.L</h2>
-        </div>
-        <div class="rules-grid">
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Проблемы со связью и вылеты</div>
+        <section id="combat">
+            <div class="section-header"><div class="header-line"></div><h2>7. Проведение боев O.C.L</h2></div>
+            <div class="rules-grid">
+                <div class="rule-card searchable" onclick="copyCardText(this)">
+                    <div class="card-title">Связь, вылеты и споры</div>
                     <span class="badge-penalty warn">5 минут дедлайн</span>
-                </div>
-                <div class="card-desc">
-                    Если прямо посреди матча у вас оборвалось соединение или вылетела игра, включается счетчик: у вас есть ровно 5 минут на немедленное возвращение. Если не уложитесь — поединок аннулируется либо присуждается технический нокаут (ТКО) по решению рефери.
+                    <div class="card-desc">При вылете или обрыве связи дается ровно 5 минут на возвращение. Вердикт судьи на ринге окончательный, но бой можно оспорить при наличии видеозаписи.</div>
                 </div>
             </div>
+        </section>
 
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Неоспоримый авторитет рефери</div>
-                    <span class="badge-penalty info">Закон на ринге</span>
-                </div>
-                <div class="card-desc">
-                    Вердикт судьи на ринге — закон, который не обсуждается во время боя. Если рефери допустил явную и грубую ошибку, после проверки такое судейство будет жестко караться.
-                </div>
+        <section id="bans">
+            <div class="section-header"><div class="header-line"></div><h2>8. Бан стили</h2></div>
+            <div class="bans-flex">
+                <div class="ban-box searchable">slugger</div>
+                <div class="ban-box searchable">hawk</div>
+                <div class="ban-box searchable">white ash</div>
+                <div class="ban-box searchable">shotgun</div>
+                <div class="ban-box searchable">wolf</div>
+                <div class="ban-box searchable">hammer</div>
+                <div class="ban-box searchable">switch hit (абилкой нельзя сбивать ульту в конце боя)</div>
+                <div class="ban-box searchable">chronos</div>
+                <div class="ban-box searchable">bullet</div>
+                <div class="ban-box searchable">supernova</div>
+                <div class="ban-box searchable">deimos</div>
+                <div class="ban-box searchable">hitman</div>
+                <div class="ban-box searchable">all shinies</div>
+                <div class="ban-box searchable">exclusive styles</div>
             </div>
+        </section>
 
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Суточный лимит на поединки</div>
-                    <span class="badge-penalty warn">Макс 3 боя</span>
-                </div>
-                <div class="card-desc">
-                    Один боец имеет право провести не более 3 боев за одни сутки.
-                </div>
-            </div>
+    </main>
 
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Смена дивизионов и путевка наверх</div>
-                    <span class="badge-penalty info">Продвижение</span>
-                </div>
-                <div class="card-desc">
-                    При сильном доминировании администрация может принудительно перевести вас в более высокий рейтинг. В обычном порядке для перехода нужно завоевать чемпионский пояс текущего рейтинга и провести минимум одну успешную защиту.
-                </div>
-            </div>
+    <footer>
+        <p>Официальный регламент соревновательной лиги <span>O.C.L (Ouroboros Community League)</span> &copy; 2026</p>
+    </footer>
 
-            <div class="rule-card searchable" onclick="copyCardText(this)">
-                <div class="card-top">
-                    <div class="card-title">Право на вызов чемпиона</div>
-                    <span class="badge-penalty info">Топ-5 / Топ-1</span>
-                </div>
-                <div class="card-desc">
-                    Бросить вызов чемпиону могут только бойцы из Топ-5 рейтинга. Первый номер таблицы (Топ-1) имеет эксклюзивную привилегию: чемпион обязан принять его вызов безоговорочно!
-                </div>
-            </div>
-        </div>
-    </section>
+    <script>
+        // Прелоадер
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.visibility = 'hidden', 500);
+        }, 3000);
 
-    <!-- 9. Бан стили -->
-    <section id="bans">
-        <div class="section-header">
-            <div class="header-line"></div>
-            <h2>9. Бан стили</h2>
-        </div>
-        <div class="bans-flex">
-            <div class="ban-box searchable">slugger</div>
-            <div class="ban-box searchable">hawk</div>
-            <div class="ban-box searchable">hammer</div>
-            <div class="ban-box searchable">switch hit (не может отменять ульту)</div>
-            <div class="ban-box searchable">white ash</div>
-            <div class="ban-box searchable">wolf</div>
-            <div class="ban-box searchable">shotgun</div>
-            <div class="ban-box searchable">corkscrew</div>
-            <div class="ban-box searchable">bullet</div>
-            <div class="ban-box searchable">chronos</div>
-            <div class="ban-box searchable">deimos</div>
-            <div class="ban-box searchable">all shinies</div>
-            <div class="ban-box searchable">exclusive styles</div>
-        </div>
-    </section>
+        // Статус арены
+        function checkArenaStatus() {
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const msk = new Date(utc + (3600000 * 3));
+            const hours = msk.getHours();
+            const dot = document.getElementById('radarDot');
+            const text = document.getElementById('radarText');
+            if (hours >= 12 && hours < 22) {
+                dot.className = 'radar-dot open';
+                text.textContent = 'Арена O.C.L открыта (12:00 - 22:00 МСК)';
+                text.style.color = '#00e676';
+            } else {
+                dot.className = 'radar-dot closed';
+                text.textContent = 'Арена закрыта (Открытие в 12:00 МСК)';
+                text.style.color = 'var(--red)';
+            }
+        }
+        checkArenaStatus();
 
-</main>
+        // Поиск правил
+        function searchRules() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            document.querySelectorAll('.searchable').forEach(item => {
+                item.style.display = item.textContent.toLowerCase().includes(query) ? "" : "none";
+            });
+        }
+
+        // Копирование карточек
+        function copyCardText(card) {
+            const text = card.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            });
+        }
+
+        // Настройки и темы
+        const themeClasses = ['theme-gold', 'theme-cyan', 'theme-red', 'theme-purple', 'theme-green', 'theme-orange', 'theme-blue', 'theme-pink', 'theme-custom'];
+        function setTheme(themeName, element) {
+            themeClasses.forEach(t => document.body.classList.remove(t));
+            document.body.classList.add(themeName);
+            document.querySelectorAll('.dot-btn').forEach(b => b.classList.remove('active'));
+            if (element) element.classList.add('active');
+            localStorage.setItem('ocl_theme', themeName);
+        }
+
+        function toggleSettings(force) {
+            const dd = document.getElementById('settingsDropdown');
+            dd.classList.toggle('open', typeof force === 'boolean' ? force : undefined);
+        }
+
+        function toggleMotion(enabled) {
+            document.body.classList.toggle('no-motion', !enabled);
+            localStorage.setItem('ocl_motion', enabled ? 'on' : 'off');
+        }
+    </script>
+</body>
+</html>
