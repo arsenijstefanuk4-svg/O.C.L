@@ -362,23 +362,48 @@
         @keyframes lineGrow { 0%, 100% { width: 25px; } 50% { width: 42px; } }
 
         .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        
+        /* ИСПРАВЛЕННЫЕ КАРТОЧКИ: равномерные отступы и подсветка со всех сторон (включая низ) */
         .rule-card {
-            background: var(--bg-card); border: 1px solid var(--border-grid); border-radius: 16px; padding: 22px;
-            backdrop-filter: blur(16px); display: flex; flex-direction: column; justify-content: space-between;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; position: relative; overflow: hidden;
+            background: var(--bg-card); 
+            border: 1px solid var(--border-grid); 
+            border-radius: 16px; 
+            padding: 22px;
+            margin-bottom: 0; /* Убраны пустые зоны, сетка контролирует отступы */
+            backdrop-filter: blur(16px); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            cursor: pointer; 
+            position: relative; 
+            overflow: hidden;
             animation: cardAppear 0.5s ease backwards;
+            /* Равномерное свечение во все стороны, включая нижнюю часть */
+            box-shadow: 0 0 15px rgba(255, 183, 3, 0.15), inset 0 0 10px rgba(255, 183, 3, 0.05);
         }
         .rule-card::before {
             content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
             background: linear-gradient(90deg, var(--gold), transparent 70%); opacity: 0.7;
         }
         @keyframes cardAppear { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        .rule-card:hover { transform: translateY(-6px) scale(1.012); border-color: var(--gold); box-shadow: 0 12px 32px var(--gold-glow); }
+        .rule-card:hover { 
+            transform: translateY(-6px) scale(1.012); 
+            border-color: var(--gold); 
+            box-shadow: 0 0 25px var(--gold-glow), inset 0 0 15px var(--gold-glow); 
+        }
         .rule-card.punch { animation: cardPunch 0.35s ease; }
         @keyframes cardPunch { 0% { transform: scale(1); } 35% { transform: scale(0.96) rotate(-0.6deg); } 60% { transform: scale(1.03) rotate(0.6deg); box-shadow: 0 0 30px var(--gold-glow); } 100% { transform: scale(1); } }
-        .rule-card.danger-card { border-color: rgba(255, 42, 75, 0.3); }
+        
+        .rule-card.danger-card { 
+            border-color: rgba(255, 42, 75, 0.3); 
+            box-shadow: 0 0 15px rgba(255, 42, 75, 0.15), inset 0 0 10px rgba(255, 42, 75, 0.05);
+        }
         .rule-card.danger-card::before { background: linear-gradient(90deg, var(--red), transparent 70%); }
-        .rule-card.danger-card:hover { border-color: var(--red); box-shadow: 0 12px 32px rgba(255, 42, 75, 0.32); }
+        .rule-card.danger-card:hover { 
+            border-color: var(--red); 
+            box-shadow: 0 0 25px rgba(255, 42, 75, 0.4), inset 0 0 15px rgba(255, 42, 75, 0.1); 
+        }
 
         .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; gap: 10px; }
         .card-title { font-size: 1.1rem; font-weight: 800; line-height: 1.3; }
@@ -393,11 +418,25 @@
         .card-desc strong { color: #fff; }
 
         .bans-flex { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+        
+        /* ИСПРАВЛЕННЫЕ БАН-БОКСЫ: аккуратные отступы и подсветка со всех сторон */
         .ban-box {
-            background: rgba(255, 42, 75, 0.06); border: 1px solid rgba(255, 42, 75, 0.25); border-radius: 10px;
-            padding: 14px 8px; text-align: center; font-weight: 800; color: #ff6b81; font-size: 0.85rem; transition: 0.3s;
+            background: rgba(255, 42, 75, 0.06); 
+            border: 1px solid rgba(255, 42, 75, 0.25); 
+            border-radius: 10px;
+            padding: 14px 12px; 
+            text-align: center; 
+            font-weight: 800; 
+            color: #ff6b81; 
+            font-size: 0.85rem; 
+            transition: 0.3s;
+            box-shadow: 0 0 10px rgba(255, 42, 75, 0.1);
         }
-        .ban-box:hover { background: rgba(255, 42, 75, 0.2); transform: translateY(-4px) scale(1.05); box-shadow: 0 5px 15px rgba(255,42,75,0.3); }
+        .ban-box:hover { 
+            background: rgba(255, 42, 75, 0.2); 
+            transform: translateY(-4px) scale(1.05); 
+            box-shadow: 0 0 20px rgba(255,42,75,0.35); 
+        }
 
         #toast {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
