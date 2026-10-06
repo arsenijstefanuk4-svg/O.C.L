@@ -280,23 +280,24 @@
         .container { width: 100%; max-width: 1250px; margin: 25px auto; padding: 0 15px; position: relative; z-index: 2; }
         section { margin-bottom: 16px; }
 
-        .section-header { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; border-bottom: 2px solid var(--border-grid); padding-bottom: 3px; }
-        .section-header h2 { font-family: 'Teko', sans-serif; font-size: 2.1rem; text-transform: uppercase; letter-spacing: 1px; }
-        .header-line { height: 4px; width: 25px; background: var(--gold); box-shadow: 0 0 12px var(--gold-glow); border-radius: 2px; }
+        .section-header { display:flex; align-items:center; gap:10px; margin:26px 0 12px; border-bottom:1px solid var(--border-grid); padding:0 0 9px; position:relative; }
+        .section-header::after { content:""; position:absolute; left:0; bottom:-1px; width:90px; height:2px; background:linear-gradient(90deg,var(--gold),transparent); box-shadow:0 0 10px var(--gold-glow); }
+        .section-header h2 { font-family:'Teko',sans-serif; font-size:2.25rem; line-height:1; text-transform:uppercase; letter-spacing:1.4px; text-shadow:0 0 16px var(--gold-glow); }
+        .header-line { height:8px; width:4px; background:var(--gold); box-shadow:0 0 14px var(--gold-glow); border-radius:4px; }
 
-        .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 7px; align-items: start; }
+        .rules-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:12px; align-items:stretch; }
         
         /* КАРТОЧКИ: плотные, компактные, без лишних вертикальных отступов */
         .rule-card {
-            background: var(--bg-card); 
-            border: 1px solid var(--border-grid); 
-            border-radius: 14px; 
-            padding: 9px 11px;
-            backdrop-filter: blur(16px); 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: flex-start;
-            align-self: start;
+            background:linear-gradient(145deg,rgba(18,22,36,.86),rgba(8,10,18,.78));
+            border:1px solid var(--border-grid);
+            border-radius:16px;
+            padding:14px 15px 15px;
+            backdrop-filter:blur(16px);
+            display:flex;
+            flex-direction:column;
+            justify-content:flex-start;
+            align-self:stretch;
             transition: transform .32s cubic-bezier(.2,.8,.2,1), border-color .28s ease, box-shadow .32s ease, background .32s ease; 
             cursor: pointer; 
             position: relative; 
@@ -334,8 +335,12 @@
         .badge-penalty.info { background: rgba(0, 242, 254, 0.15); color: var(--cyan); border: 1px solid var(--cyan); }
 
         /* Текст внутри карточек без пустых разрывов строк */
-        .card-desc { color: var(--text-sub); font-size: 0.84rem; line-height: 1.22; display: flex; flex-direction: column; gap: 0; }
-        .card-desc strong { color: #fff; }
+        .card-desc { color:var(--text-sub); font-size:.88rem; line-height:1.5; display:flex; flex-direction:column; gap:7px; }
+        .card-desc span { display:block; }
+        .card-desc strong { color:#fff; }
+        .card-top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:9px; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,.06); }
+        .card-title { font-weight:900; color:#fff; letter-spacing:.2px; }
+        section { scroll-margin-top:105px; margin-bottom:18px; }
 
         .bans-flex { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
         
@@ -544,252 +549,184 @@
 
     <main class="container">
 
+
         <section id="pd">
-            <div class="section-header">
-                <div class="header-line"></div>
-                <h2>1. Пассив</h2>
-            </div>
+            <div class="section-header"><div class="header-line"></div><h2>1. Пассив</h2></div>
             <div class="rules-grid">
                 <div class="rule-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">1.1 ПД Фишинг</div>
-                        <span class="badge-penalty info">Определение</span>
-                    </div>
+                    <div class="card-top"><div class="card-title">1.1 ПД Фишинг</div><span class="badge-penalty info">Правила</span></div>
                     <div class="card-desc">
-                        <span>ПД Фишинг — намеренное прекращение ударов/взаимодействия для идеального уклонения.</span>
-                        <span>При спамящих комбо соперника можно сделать два уклона. Ждать удара можно максимум <strong>3 секунды</strong>.</span>
-                        <span>Попытка удара, контрудар или способность сбрасывают таймер. Использование эмоций = бездействие.</span>
+                        <span>Если вас ловят на стаггеринге или вы ничего не можете сделать кроме уклона, можно выждать момент и сделать два уклона, если по вам делают спамящие комбо (особенно касается медленных стилей).</span>
+                        <span><strong>Таймер:</strong> ждать удара можно максимум 2 секунды. Выход за рамки времени допускается с предупреждением, но при злоупотреблении — фол.</span>
+                        <span>Попытка удара и получение контрудара сбрасывают таймер ПД-фиша. Атака и способности, возвращающие бойцов в нейтральное положение, также сбрасывают таймер.</span>
+                        <span>Использование эмоций приравнивается к бездействию, кроме начала раунда.</span>
+                        <span>ПД-фишить можно, когда у бойца полностью закончилась стамина.</span>
                     </div>
                 </div>
-
-                <div class="rule-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">1.2 Пассив в конце боя для ульты</div>
-                        <span class="badge-penalty danger">2 Фола</span>
-                    </div>
-                    <div class="card-desc">
-                        <span>За пассив в конце боя с целью накопить/дать ульту выдается сразу 2 фола.</span>
-                    </div>
-                </div>
-
                 <div class="rule-card danger-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">1.3 Подряд идущие ПД</div>
-                        <span class="badge-penalty warn">Фол</span>
-                    </div>
-                    <div class="card-desc">
-                        <span>Если вы делаете 2 ПД подряд, не начав атаку самостоятельно (даже в тайминг), за это дается фол.</span>
-                    </div>
+                    <div class="card-top"><div class="card-title">1.2 Пассив в конце боя</div><span class="badge-penalty danger">2 Фола</span></div>
+                    <div class="card-desc"><span>За пассив в конце боя, чтобы дать ульту, даётся сразу 2 фола.</span></div>
+                </div>
+                <div class="rule-card danger-card searchable" onclick="copyCardText(this)">
+                    <div class="card-top"><div class="card-title">1.3 Два ПД подряд</div><span class="badge-penalty warn">Фол</span></div>
+                    <div class="card-desc"><span>Если вы делаете 2 ПД подряд, не начав атаку самостоятельно, даже если уложились в тайминг, за это даётся фол.</span></div>
                 </div>
             </div>
         </section>
 
         <section id="bugs">
-            <div class="section-header">
-                <div class="header-line"></div>
-                <h2>2. Багоюз</h2>
-            </div>
+            <div class="section-header"><div class="header-line"></div><h2>2. Багоюз</h2></div>
             <div class="rules-grid">
                 <div class="rule-card danger-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">2.1 Парирование ульты</div>
-                        <span class="badge-penalty danger">ТКО / 1.5 Фол</span>
-                    </div>
+                    <div class="card-top"><div class="card-title">2.1 Парирование ульты</div><span class="badge-penalty danger">ТКО / 1.5 Фола</span></div>
                     <div class="card-desc">
-                        <span>Прожатие блока под летящую ульту, когда ульта решающая для боя — карается ТКО.</span>
-                        <span>Если ульта не решающая — дается <strong>1.5 фола</strong>.</span>
+                        <span>Когда в вас летит ульта и вас должны пробить, а вы в тайминг прожимаете блок и ульта сжирается.</span>
+                        <span>Если при использовании ульта будет финальной для боя — даётся ТКО. Если ульта не решающая — даётся 1.5 фола. Если у соперника уже есть предупреждение за что-либо, то у него уже будет 2 фола.</span>
                     </div>
                 </div>
-
                 <div class="rule-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">2.2 Нелегальный стаггеринг</div>
-                        <span class="badge-penalty warn">Пред ➔ Фол</span>
-                    </div>
+                    <div class="card-top"><div class="card-title">2.2 Нелегальный стаггеринг</div><span class="badge-penalty warn">Пред ➜ Фол</span></div>
                     <div class="card-desc">
-                        <span>Задержка удара M1, становящегося неуклоняемым и притягивающего игрока вопреки кадрам уклона.</span>
-                        <span>Первое нарушение — устное предупреждение, далее — фол. Обычный стаггеринг разрешен.</span>
+                        <span>Первое нарушение влечёт устное предупреждение, последующие — фол.</span>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="combos">
-            <div class="section-header">
-                <div class="header-line"></div>
-                <h2>3. Слоуклики</h2>
-            </div>
+            <div class="section-header"><div class="header-line"></div><h2>3. Слоуклики</h2></div>
             <div class="rules-grid">
                 <div class="rule-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">3.1 Правила применения</div>
-                        <span class="badge-penalty warn">Фол</span>
-                    </div>
+                    <div class="card-top"><div class="card-title">3.1 Правила применения</div><span class="badge-penalty warn">Фол</span></div>
                     <div class="card-desc">
-                        <span>Медленные M1 разрешены только после попадания под ультимейт (не после способностей).</span>
-                        <span>Разрешено использовать слоуклики только для <strong>ОДНОЙ СЕРИИ УДАРОВ</strong>, превышение ведет к фолу.</span>
+                        <span>Медленные удары M1 разрешены только после того, как игрок попал под ультимейт. Их нельзя использовать после способностей (Вращение Демпси, Stampede и т. д.).</span>
+                        <span>Игрокам разрешено использовать медленные M1 только для <strong>ОДНОЙ СЕРИИ УДАРОВ</strong>, большее количество приведёт к фолу.</span>
                     </div>
                 </div>
-
                 <div class="rule-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">3.2 Исключения</div>
-                        <span class="badge-penalty info">Особые стили</span>
-                    </div>
+                    <div class="card-top"><div class="card-title">3.2 Исключение</div><span class="badge-penalty info">Особые условия</span></div>
                     <div class="card-desc">
-                        <span>Для стиля Крюк (corkscrew) слоуклики после ультимейта запрещены.</span>
-                        <span>Для Айрон Фиста после ультимейта разрешено делать <strong>два комбо слоуклика</strong>.</span>
+                        <span>Нельзя использовать стиль Крюк (corkscrew) слоу-клики после ультимейта.</span>
+                        <span>После ультимейта Айрон Фиста можно делать <strong>ДВА КОМБО СЛОУ КЛИКА</strong>.</span>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="skating">
-            <div class="section-header">
-                <div class="header-line"></div>
-                <h2>4. С-кейтинг и БД</h2>
-            </div>
+            <div class="section-header"><div class="header-line"></div><h2>4. С-Скейтинг и БД</h2></div>
             <div class="rules-grid">
                 <div class="rule-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">4.1 С-кейтинг и бекдеш</div>
-                        <span class="badge-penalty warn">Фол</span>
-                    </div>
+                    <div class="card-top"><div class="card-title">4.1 С-кейтинг и БД</div><span class="badge-penalty warn">Фол</span></div>
                     <div class="card-desc">
-                        <span>Отход назад с зажатой клавишей С или стиком вниз (БД). Разрешен после удара/комбо по врагу.</span>
-                        <span>Пропуск двух действий противника при отходе назад без атак — фол.</span>
+                        <span>С-кейтинг можно использовать после попадания удара или комбо по сопернику.</span>
+                        <span>Если вы идёте назад и ничего не делаете, пропуская два действия противника — фол. Аналогично с бекдешом.</span>
                     </div>
                 </div>
-
                 <div class="rule-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">4.2 Условия разрешений</div>
-                        <span class="badge-penalty warn">Пред ➔ Фол</span>
-                    </div>
+                    <div class="card-top"><div class="card-title">4.2 Условия разрешения</div><span class="badge-penalty warn">Пред ➜ Фол</span></div>
                     <div class="card-desc">
-                        <span>Скейт и бекдеш разрешены, если по сопернику прошел хотя бы один удар или серия.</span>
+                        <span>Скейт и БД разрешены, если по сопернику сделали один любой удар или серию. За первое нарушение — устное предупреждение, последующие — фол.</span>
                     </div>
                 </div>
-
                 <div class="rule-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">4.3 Против Демпси и Шотгана</div>
-                        <span class="badge-penalty info">Особые правила</span>
-                    </div>
+                    <div class="card-top"><div class="card-title">4.3 Против Демпси и Шотгана</div><span class="badge-penalty info">Особые правила</span></div>
                     <div class="card-desc">
-                        <span>Против Демпси фишить можно, но С-скейтить нельзя. Против Шотгана разрешен бекдеш на способность.</span>
+                        <span>Против Демпси можно фишить, но нельзя уходить назад (С-кейтить).</span>
+                        <span>Против Шотгана можно использовать бекдеш на способность.</span>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="dd">
-            <div class="section-header">
-                <div class="header-line"></div>
-                <h2>5. Дабл деш</h2>
-            </div>
+            <div class="section-header"><div class="header-line"></div><h2>5. Дабл деш</h2></div>
             <div class="rules-grid">
-                <div class="rule-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">5.1 Регламент дешей</div>
-                        <span class="badge-penalty warn">1-2 Фола</span>
-                    </div>
+                <div class="rule-card danger-card searchable" onclick="copyCardText(this)">
+                    <div class="card-top"><div class="card-title">5.1 Дабл деш</div><span class="badge-penalty warn">1–2 Фола</span></div>
                     <div class="card-desc">
-                        <span>Дабл деш (ДД) запрещен от финта, но разрешен от обычных ударов. Трипл деш запрещен в любой форме.</span>
-                        <span>За запрещенный ДД — <strong>1 фол</strong>, за 3 деша и более — <strong>2 фола</strong>.</span>
+                        <span>ДД запрещён от финта. От обычных ударов ДД разрешён.</span>
+                        <span>Трипл деши более в любой форме запрещены.</span>
+                        <span>За ДД даётся <strong>1 фол</strong>. За 3 деша и более — <strong>2 фола</strong>.</span>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="distance">
-            <div class="section-header">
-                <div class="header-line"></div>
-                <h2>6. Дистанция</h2>
-            </div>
+            <div class="section-header"><div class="header-line"></div><h2>6. Дистанция</h2></div>
             <div class="rules-grid">
                 <div class="rule-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">6.1 Правила дистанции и байтов</div>
-                        <span class="badge-penalty warn">Фол</span>
-                    </div>
+                    <div class="card-top"><div class="card-title">6.1 Дистанция и байт</div><span class="badge-penalty warn">Фол</span></div>
                     <div class="card-desc">
-                        <span>Дистанцию держать можно. Байт на промах: если враг дважды промахнулся на вашей дистанции, а вы не ответили ударом — фол.</span>
+                        <span>Дистанцию можно держать.</span>
+                        <span>Если вы байтили врага на удар, он промахнулся на дистанции вашего удара и вы не ударили по нему дважды — это фол.</span>
+                        <span>Пример: вы байтите на удар, враг промахнулся, вы не ударили; затем враг ещё раз промахнулся и вы ещё раз не ударили.</span>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="ref">
-            <div class="section-header">
-                <div class="header-line"></div>
-                <h2>7. Реферство</h2>
-            </div>
+            <div class="section-header"><div class="header-line"></div><h2>7. Реферство</h2></div>
             <div class="rules-grid">
                 <div class="rule-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">7.1 Поведение рефери</div>
-                        <span class="badge-penalty warn">Выговор</span>
-                    </div>
+                    <div class="card-top"><div class="card-title">7.1 Поведение рефери</div><span class="badge-penalty warn">Выговор</span></div>
                     <div class="card-desc">
-                        <span>Рефери обязан адекватно общаться с бойцами без оскорблений. За нарушение выдается выговор.</span>
+                        <span>Рефери обязан вести себя адекватно с игроками, у которых он ведёт бой или собирается вести бой. Он не должен их оскорблять и тому подобное.</span>
+                        <span>За каждое оскорбление и неуважительное поведение даётся выговор, если это будет замечено рефери рангом выше или владельцем лиги.</span>
                     </div>
                 </div>
-
                 <div class="rule-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">7.2 Полномочия и съемка</div>
-                        <span class="badge-penalty info">Обязанности</span>
-                    </div>
+                    <div class="card-top"><div class="card-title">7.2 Превышение полномочий</div><span class="badge-penalty danger">Запрещено</span></div>
                     <div class="card-desc">
-                        <span>Запрещено вымогать деньги за проведение боев. Рефери обязан вести видеозапись каждого боя для разбора спорных моментов.</span>
+                        <span>Рефери запрещено превышать свои полномочия, например говорить, что он не примет бой, пока не получит денежное вознаграждение.</span>
+                    </div>
+                </div>
+                <div class="rule-card searchable" onclick="copyCardText(this)">
+                    <div class="card-top"><div class="card-title">7.3 Главные рефери</div><span class="badge-penalty info">Организация</span></div>
+                    <div class="card-desc">
+                        <span>Выговоры будут делать главные рефери. Будут основные рефери, которые принимают бои, и главные рефери, которые помогают неопытным рефери или подключаются там, где требуется независимое мнение, не заинтересованное в победе или поражении бойца.</span>
+                    </div>
+                </div>
+                <div class="rule-card searchable" onclick="copyCardText(this)">
+                    <div class="card-top"><div class="card-title">7.4 Запись боя</div><span class="badge-penalty info">Обязанность</span></div>
+                    <div class="card-desc">
+                        <span>Рефери обязан при проведении своего боя проводить его съёмку, чтобы при спорной ситуации главные рефери могли посмотреть, что произошло, и всё решить.</span>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="disputes">
-            <div class="section-header">
-                <div class="header-line"></div>
-                <h2>8. Оспоры боев</h2>
-            </div>
+            <div class="section-header"><div class="header-line"></div><h2>8. Оспоры боёв</h2></div>
             <div class="rules-grid">
                 <div class="rule-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">8.1 Порядок оспаривания</div>
-                        <span class="badge-penalty warn">Выговор рефери</span>
-                    </div>
+                    <div class="card-top"><div class="card-title">8.1 Оспаривание боя</div><span class="badge-penalty warn">По записи</span></div>
                     <div class="card-desc">
-                        <span>Оспорить бой можно при наличии видеозаписи у бойца или через главного рефери. Без записи рефери получает выговор.</span>
+                        <span>Вердикт рефери и его авторитет неоспоримы, но бывают ситуации, где рефери мог что-то не увидеть или специально не замечать фолы одного из бойцов.</span>
+                        <span>На этот случай бойцы должны вести запись. Бой можно оспорить, если у бойца есть запись с доказательствами, либо через главного рефери попросить запись у рефери, который смотрел бой.</span>
                     </div>
+                </div>
+                <div class="rule-card danger-card searchable" onclick="copyCardText(this)">
+                    <div class="card-top"><div class="card-title">8.2 Отсутствие записи</div><span class="badge-penalty danger">Выговор</span></div>
+                    <div class="card-desc"><span>Если записи боя не будет, рефери получает выговор.</span></div>
                 </div>
             </div>
         </section>
 
         <section id="respect">
-            <div class="section-header">
-                <div class="header-line"></div>
-                <h2>9. Кара за неуважение</h2>
-            </div>
+            <div class="section-header"><div class="header-line"></div><h2>9. Кара за неуважение</h2></div>
             <div class="rules-grid">
                 <div class="rule-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">9.1 Отмена заявок</div>
-                        <span class="badge-penalty warn">Отстранение</span>
-                    </div>
-                    <div class="card-desc">
-                        <span>Отмена заявки боя после поражения карается временным отстранением от боев.</span>
-                    </div>
+                    <div class="card-top"><div class="card-title">9.1 Отмена заявки после поражения</div><span class="badge-penalty danger">Отстранение</span></div>
+                    <div class="card-desc"><span>Если вы отменили свою заявку боя, когда вы уже проиграли, вам за это дадут отстранение от боёв.</span></div>
                 </div>
-
                 <div class="rule-card danger-card searchable" onclick="copyCardText(this)">
-                    <div class="card-top">
-                        <div class="card-title">9.2 Токсичность</div>
-                        <span class="badge-penalty danger">Пред ➔ Фол</span>
-                    </div>
+                    <div class="card-top"><div class="card-title">9.2 Вызывающее поведение</div><span class="badge-penalty warn">Пред ➜ Фол</span></div>
                     <div class="card-desc">
-                        <span>Вызывающее поведение карается предупреждением (первый раз), затем фолом.</span>
-                        <span>Запрещены токсичные эмоции (эмоция L и пригибание Савамуры).</span>
+                        <span>Вызывающее поведение во время боя на первый раз карается предупреждением, при последующем таком поведении вам дадут фол.</span>
+                        <span>Токсичные эмоции, за которые выдаётся наказание, касаются в основном эмоции L и эмоции Савамуры, где он немного пригибается.</span>
                     </div>
                 </div>
             </div>
