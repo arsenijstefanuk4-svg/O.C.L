@@ -18,17 +18,21 @@
             --text-sub: #98a2b8;
             --border-grid: rgba(255, 183, 3, 0.15);
             --canvas-tan: #7a5a3a;
+            --accent-2: #00f2fe;
+            --accent-3: #ff2a4b;
+            --light-alpha: 0.16;
         }
 
-        body.theme-gold    { --gold: #ffb703; --gold-glow: rgba(255, 183, 3, 0.5);  --border-grid: rgba(255, 183, 3, 0.15); --gold-r:255; --gold-g:183; --gold-b:3; }
-        body.theme-cyan     { --gold: #00f2fe; --gold-glow: rgba(0, 242, 254, 0.5);  --border-grid: rgba(0, 242, 254, 0.15); --gold-r:0; --gold-g:242; --gold-b:254; }
-        body.theme-red       { --gold: #ff2a4b; --gold-glow: rgba(255, 42, 75, 0.5);  --border-grid: rgba(255, 42, 75, 0.15); --gold-r:255; --gold-g:42; --gold-b:75; }
-        body.theme-purple   { --gold: #c026d3; --gold-glow: rgba(192, 38, 211, 0.5); --border-grid: rgba(192, 38, 211, 0.15); --gold-r:192; --gold-g:38; --gold-b:211; }
-        body.theme-green    { --gold: #00e676; --gold-glow: rgba(0, 230, 118, 0.5);  --border-grid: rgba(0, 230, 118, 0.15); --gold-r:0; --gold-g:230; --gold-b:118; }
-        body.theme-orange   { --gold: #ff6d00; --gold-glow: rgba(255, 109, 0, 0.5);  --border-grid: rgba(255, 109, 0, 0.15); --gold-r:255; --gold-g:109; --gold-b:0; }
-        body.theme-blue     { --gold: #2979ff; --gold-glow: rgba(41, 121, 255, 0.5); --border-grid: rgba(41, 121, 255, 0.15); --gold-r:41; --gold-g:121; --gold-b:255; }
-        body.theme-pink     { --gold: #ff4dab; --gold-glow: rgba(255, 77, 171, 0.5); --border-grid: rgba(255, 77, 171, 0.15); --gold-r:255; --gold-g:77; --gold-b:171; }
-        body.theme-custom   { }
+        body.theme-boxing { --gold:#ffb703; --gold-glow:rgba(255,183,3,.55); --accent-2:#ff2a4b; --accent-3:#00f2fe; --border-grid:rgba(255,183,3,.20); --gold-r:255; --gold-g:183; --gold-b:3; }
+        body.theme-relax { --gold:#57e8ff; --gold-glow:rgba(87,232,255,.40); --accent-2:#7c8cff; --accent-3:#8affc1; --border-grid:rgba(87,232,255,.18); --gold-r:87; --gold-g:232; --gold-b:255; }
+        body.theme-rgb { --gold:#ff4fd8; --gold-glow:rgba(255,79,216,.48); --accent-2:#00f2fe; --accent-3:#7cff00; --border-grid:rgba(255,79,216,.22); --gold-r:255; --gold-g:79; --gold-b:216; }
+        body.theme-night { --gold:#9b7cff; --gold-glow:rgba(155,124,255,.45); --accent-2:#00d9ff; --accent-3:#ff4f9a; --border-grid:rgba(155,124,255,.20); --gold-r:155; --gold-g:124; --gold-b:255; }
+        body.theme-champion { --gold:#ffd166; --gold-glow:rgba(255,209,102,.58); --accent-2:#00e5ff; --accent-3:#ff496c; --border-grid:rgba(255,209,102,.22); --gold-r:255; --gold-g:209; --gold-b:102; }
+        body.theme-custom .marquee-wrapper { background:linear-gradient(90deg, color-mix(in srgb, var(--gold) 25%, #050509), var(--gold), color-mix(in srgb, var(--accent-2) 45%, #050509)); background-size:200% 100%; animation:customFlow 6s ease infinite; }
+        body.theme-custom .rule-card:hover { box-shadow:0 0 26px var(--gold-glow), inset 0 0 14px var(--gold-glow); }
+        @keyframes customFlow { 0%,100% { background-position:0% 50%; } 50% { background-position:100% 50%; } }
+        body.theme-gold { --gold:#ffb703; --gold-glow:rgba(255,183,3,.55); --accent-2:#ff2a4b; --accent-3:#00f2fe; --border-grid:rgba(255,183,3,.20); --gold-r:255; --gold-g:183; --gold-b:3; }
+
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
@@ -53,6 +57,19 @@
             content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
             background: radial-gradient(ellipse 90% 80% at 50% 45%, transparent 55%, rgba(0,0,0,0.55) 100%);
         }
+
+        body::before {
+            content: ""; position: fixed; inset: -25%; pointer-events: none; z-index: 0;
+            background: conic-gradient(from 90deg at 50% 50%, var(--accent-2), transparent 18%, var(--gold-glow), transparent 42%, var(--accent-3), transparent 72%, var(--accent-2));
+            filter: blur(90px); opacity: .14; animation: ambientLight 18s ease-in-out infinite alternate;
+        }
+        @keyframes ambientLight {
+            0% { transform: rotate(0deg) scale(1); opacity: .10; }
+            50% { transform: rotate(18deg) scale(1.08); opacity: .19; }
+            100% { transform: rotate(-12deg) scale(1.02); opacity: .13; }
+        }
+        body.theme-rgb::before { animation: rgbAura 7s linear infinite; opacity: .22; }
+        @keyframes rgbAura { to { transform: rotate(360deg) scale(1.08); filter: blur(85px) hue-rotate(360deg); } }
 
         body.no-motion *, body.no-motion *::before, body.no-motion *::after {
             animation: none !important; transition: none !important; scroll-behavior: auto !important;
@@ -85,14 +102,14 @@
         .spotlight-sweep {
             position: fixed; top: -30%; left: -20%; width: 55%; height: 160%; z-index: 0;
             background: radial-gradient(ellipse at center, var(--gold-glow) 0%, transparent 65%);
-            opacity: 0.14; filter: blur(14px); animation: sweepLight 20s ease-in-out infinite;
+            opacity: 0.22; filter: blur(18px); animation: sweepLight 15s ease-in-out infinite;
         }
         @keyframes sweepLight {
             0%, 100% { transform: translateX(0) rotate(-8deg); }
             50% { transform: translateX(150vw) rotate(8deg); }
         }
 
-        .corner-glow { position: fixed; width: 280px; height: 280px; border-radius: 50%; z-index: 0; filter: blur(70px); opacity: 0.22; animation: cornerPulse 7s ease-in-out infinite; }
+        .corner-glow { position: fixed; width: 280px; height: 280px; border-radius: 50%; z-index: 0; filter: blur(62px); opacity: 0.28; animation: cornerPulse 7s ease-in-out infinite; }
         .corner-glow.cg-tl { top: -90px; left: -90px; background: var(--red); }
         .corner-glow.cg-br { bottom: -90px; right: -90px; background: var(--gold); animation-delay: 3.2s; }
         @keyframes cornerPulse { 0%, 100% { opacity: 0.14; transform: scale(1); } 50% { opacity: 0.28; transform: scale(1.12); } }
@@ -132,28 +149,33 @@
         .settings-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border-grid); }
         .settings-head strong { font-family: 'Teko', sans-serif; font-size: 1.25rem; letter-spacing: 1px; color: var(--gold); text-transform: uppercase; }
         .settings-close { background: none; border: none; color: var(--text-sub); font-size: 1.1rem; cursor: pointer; padding: 2px 6px; border-radius: 6px; }
-        .settings-body { padding: 14px 16px 16px; }
-        .settings-row { display: flex; flex-direction: column; gap: 9px; margin-bottom: 16px; }
+        .settings-body { padding: 11px 13px 13px; }
+        .settings-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 11px; }
         .settings-row span.label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; color: var(--text-sub); letter-spacing: 1.2px; }
 
-        .color-dots { display: flex; gap: 9px; flex-wrap: wrap; }
-        .dot-btn { width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: 0.2s; flex-shrink: 0; }
-        .dot-btn:hover { transform: scale(1.18); }
-        .dot-btn.active { border-color: #fff; transform: scale(1.14); box-shadow: 0 0 10px currentColor; }
-        .dot-gold { background: #ffb703; } .dot-cyan { background: #00f2fe; } .dot-red { background: #ff2a4b; } .dot-purple { background: #c026d3; }
-        .dot-green { background: #00e676; } .dot-orange { background: #ff6d00; } .dot-blue { background: #2979ff; } .dot-pink { background: #ff4dab; }
+        .style-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; }
+        .style-btn { position:relative; overflow:hidden; min-height:58px; border:1px solid var(--border-grid); border-radius:11px; background:rgba(255,255,255,.045); color:#fff; cursor:pointer; padding:8px 9px; text-align:left; transition:.28s ease; }
+        .style-btn::before { content:""; position:absolute; inset:-40%; background:linear-gradient(120deg, transparent 35%, rgba(255,255,255,.18), transparent 65%); transform:translateX(-70%) rotate(8deg); transition:.55s ease; }
+        .style-btn:hover::before { transform:translateX(70%) rotate(8deg); }
+        .style-btn:hover { transform:translateY(-2px); border-color:var(--gold); box-shadow:0 0 18px var(--gold-glow); }
+        .style-btn.active { border-color:var(--gold); background:linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.035)); box-shadow:0 0 18px var(--gold-glow), inset 0 0 14px var(--gold-glow); }
+        .style-btn .style-icon { display:block; font-size:1.2rem; line-height:1; margin-bottom:4px; }
+        .style-btn .style-name { display:block; font-size:.72rem; font-weight:900; letter-spacing:.7px; text-transform:uppercase; }
+        .style-btn .style-sub { display:block; margin-top:2px; font-size:.58rem; color:var(--text-sub); }
+        .style-boxing { --style-a:#ffb703; --style-b:#ff2a4b; } .style-relax { --style-a:#57e8ff; --style-b:#7c8cff; }
+        .style-rgb { --style-a:#ff4fd8; --style-b:#00f2fe; } .style-night { --style-a:#9b7cff; --style-b:#00d9ff; }
+        .style-champion { --style-a:#ffd166; --style-b:#00e5ff; }
+        .style-btn .style-icon { color:var(--style-a); text-shadow:0 0 12px var(--style-a); }
 
-        .custom-color-row { display: flex; align-items: center; gap: 8px; }
-        .swatch-native { -webkit-appearance: none; appearance: none; width: 34px; height: 34px; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.15); border-radius: 9px; cursor: pointer; background: none; padding: 0; }
-        .swatch-native::-webkit-color-swatch-wrapper { padding: 0; }
-        .swatch-native::-webkit-color-swatch { border: none; border-radius: 7px; }
-        .hex-input {
-            flex: 1; min-width: 0; background: rgba(255,255,255,0.05); border: 1px solid var(--border-grid);
-            border-radius: 8px; padding: 8px 10px; color: #fff; font-size: 0.82rem; font-weight: 700;
-            font-family: 'Montserrat', monospace; outline: none;
-        }
-        .hex-input.invalid { border-color: var(--red); }
-        .hex-hint { font-size: 0.68rem; color: var(--text-sub); margin-top: 1px; }
+
+        .custom-color-box { padding: 8px; border: 1px solid var(--border-grid); border-radius: 10px; background: rgba(255,255,255,.035); }
+        .custom-color-controls { display:flex; align-items:center; gap:7px; }
+        .custom-color-input { width:42px; height:34px; padding:0; border:1px solid var(--border-grid); border-radius:8px; background:transparent; cursor:pointer; }
+        .custom-hex { flex:1; min-width:0; height:34px; border:1px solid var(--border-grid); border-radius:8px; background:rgba(255,255,255,.05); color:#fff; padding:0 9px; font:700 .78rem 'Montserrat',sans-serif; outline:none; }
+        .custom-hex:focus { border-color:var(--gold); box-shadow:0 0 12px var(--gold-glow); }
+        .custom-color-hint { display:block; margin-top:5px; color:var(--text-sub); font-size:.58rem; }
+        .custom-apply { width:100%; margin-top:7px; border:1px solid var(--gold); border-radius:8px; padding:6px 8px; background:rgba(255,255,255,.05); color:#fff; font-weight:800; cursor:pointer; transition:.25s; }
+        .custom-apply:hover { background:var(--gold); color:#080808; box-shadow:0 0 15px var(--gold-glow); }
 
         .toggle-row { display: flex; align-items: center; justify-content: space-between; }
         .switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
@@ -256,25 +278,26 @@
         .nav-link:hover, .nav-link.active-link { border-color: var(--gold); color: #fff; background: rgba(255,255,255,0.05); }
 
         .container { width: 100%; max-width: 1250px; margin: 25px auto; padding: 0 15px; position: relative; z-index: 2; }
-        section { margin-bottom: 35px; }
+        section { margin-bottom: 16px; }
 
-        .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; border-bottom: 2px solid var(--border-grid); padding-bottom: 6px; }
+        .section-header { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; border-bottom: 2px solid var(--border-grid); padding-bottom: 3px; }
         .section-header h2 { font-family: 'Teko', sans-serif; font-size: 2.1rem; text-transform: uppercase; letter-spacing: 1px; }
         .header-line { height: 4px; width: 25px; background: var(--gold); box-shadow: 0 0 12px var(--gold-glow); border-radius: 2px; }
 
-        .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 16px; }
+        .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 7px; align-items: start; }
         
         /* КАРТОЧКИ: плотные, компактные, без лишних вертикальных отступов */
         .rule-card {
             background: var(--bg-card); 
             border: 1px solid var(--border-grid); 
             border-radius: 14px; 
-            padding: 16px 18px;
+            padding: 9px 11px;
             backdrop-filter: blur(16px); 
             display: flex; 
             flex-direction: column; 
-            justify-content: space-between;
-            transition: all 0.3s ease; 
+            justify-content: flex-start;
+            align-self: start;
+            transition: transform .32s cubic-bezier(.2,.8,.2,1), border-color .28s ease, box-shadow .32s ease, background .32s ease; 
             cursor: pointer; 
             position: relative; 
             overflow: hidden;
@@ -302,8 +325,8 @@
             box-shadow: 0 0 22px rgba(255, 42, 75, 0.35), inset 0 0 12px rgba(255, 42, 75, 0.1); 
         }
 
-        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 8px; }
-        .card-title { font-size: 1.05rem; font-weight: 800; line-height: 1.2; }
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px; gap: 5px; }
+        .card-title { font-size: 1.02rem; font-weight: 800; line-height: 1.15; }
 
         .badge-penalty { font-size: 0.68rem; font-weight: 900; padding: 3px 8px; border-radius: 5px; text-transform: uppercase; white-space: nowrap; }
         .badge-penalty.warn { background: rgba(255, 183, 3, 0.15); color: var(--gold); border: 1px solid var(--gold); }
@@ -311,17 +334,17 @@
         .badge-penalty.info { background: rgba(0, 242, 254, 0.15); color: var(--cyan); border: 1px solid var(--cyan); }
 
         /* Текст внутри карточек без пустых разрывов строк */
-        .card-desc { color: var(--text-sub); font-size: 0.88rem; display: flex; flex-direction: column; gap: 6px; }
+        .card-desc { color: var(--text-sub); font-size: 0.84rem; line-height: 1.22; display: flex; flex-direction: column; gap: 0; }
         .card-desc strong { color: #fff; }
 
-        .bans-flex { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+        .bans-flex { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
         
         /* БАН-БОКСЫ: компактные, равномерная подсветка */
         .ban-box {
             background: rgba(255, 42, 75, 0.06); 
             border: 1px solid rgba(255, 42, 75, 0.25); 
             border-radius: 8px;
-            padding: 10px 10px; 
+            padding: 7px 8px; 
             text-align: center; 
             font-weight: 800; 
             color: #ff6b81; 
@@ -338,7 +361,7 @@
         #toast {
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(100px);
             background: var(--gold); color: #000; padding: 8px 20px; border-radius: 30px; font-weight: 800;
-            font-size: 0.82rem; box-shadow: 0 0 20px var(--gold-glow); opacity: 0; transition: all 0.3s ease;
+            font-size: 0.82rem; box-shadow: 0 0 20px var(--gold-glow); opacity: 0; transition: transform .32s cubic-bezier(.2,.8,.2,1), border-color .28s ease, box-shadow .32s ease, background .32s ease;
             z-index: 10000; pointer-events: none;
         }
         #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
@@ -352,6 +375,44 @@
 
         footer { text-align: center; padding: 25px 15px; border-top: 1px solid var(--border-grid); color: var(--text-sub); font-size: 0.82rem; position: relative; z-index: 2; }
         footer span { color: var(--gold); font-weight: 800; }
+        footer span { color: var(--gold); font-weight: 800; }
+
+        /* Единый свет + микро-анимации для всего интерфейса */
+        .promo-banner, .status-badge, .search-input, .nav-link, .rule-card, .ban-box, footer {
+            box-shadow: 0 0 0 1px rgba(255,255,255,.015), 0 10px 30px rgba(0,0,0,.18), 0 0 24px color-mix(in srgb, var(--gold) 12%, transparent);
+        }
+        .promo-banner { animation: floatPanel 6s ease-in-out infinite; }
+        .status-badge { animation: statusPulse 3s ease-in-out infinite; }
+        .nav-link { position:relative; overflow:hidden; }
+        .nav-link::after { content:""; position:absolute; left:-120%; bottom:0; width:90%; height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); transition:.45s; }
+        .nav-link:hover::after, .nav-link.active-link::after { left:115%; }
+        .search-input { animation: searchGlow 5s ease-in-out infinite; }
+        .rule-card, .ban-box { animation: cardEnter .65s both; animation-delay:calc(var(--i, 0) * 55ms); }
+        .rule-card:nth-child(2), .ban-box:nth-child(2) { --i:1; } .rule-card:nth-child(3), .ban-box:nth-child(3) { --i:2; }
+        .rule-card:nth-child(4), .ban-box:nth-child(4) { --i:3; } .rule-card:nth-child(5), .ban-box:nth-child(5) { --i:4; }
+        .rule-card::after, .ban-box::after { content:""; position:absolute; inset:-60% -25%; background:linear-gradient(105deg, transparent 42%, rgba(255,255,255,.09) 50%, transparent 58%); transform:translateX(-80%) rotate(8deg); animation:shineSweep 7s ease-in-out infinite; pointer-events:none; }
+        .section-header .header-line { animation:linePulse 2.5s ease-in-out infinite; }
+        .main-badge, .promo-btn, #scrollTop { animation:accentPulse 3.2s ease-in-out infinite; }
+        .rope-line.r1, .rope-line.r3 { animation:ropeGlow 2.8s ease-in-out infinite alternate; }
+        .reveal-ready { opacity:0; transform:translateY(12px); }
+        .reveal-ready.visible { opacity:1; transform:translateY(0); transition:opacity .65s ease, transform .65s cubic-bezier(.2,.8,.2,1); }
+        .rule-card.reveal-ready.visible, .ban-box.reveal-ready.visible { animation:cardEnter .65s both; }
+        @keyframes cardEnter { from { opacity:0; transform:translateY(14px) scale(.985); } to { opacity:1; transform:translateY(0) scale(1); } }
+        @keyframes shineSweep { 0%,55% { transform:translateX(-85%) rotate(8deg); } 75%,100% { transform:translateX(85%) rotate(8deg); } }
+        @keyframes linePulse { 0%,100% { width:25px; box-shadow:0 0 8px var(--gold-glow); } 50% { width:45px; box-shadow:0 0 20px var(--gold-glow); } }
+        @keyframes accentPulse { 0%,100% { filter:drop-shadow(0 0 0 transparent); } 50% { filter:drop-shadow(0 0 10px var(--gold-glow)); } }
+        @keyframes statusPulse { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-2px); } }
+        @keyframes searchGlow { 0%,100% { box-shadow:0 0 0 rgba(0,0,0,0); } 50% { box-shadow:0 0 22px color-mix(in srgb, var(--gold) 12%, transparent); } }
+        @keyframes floatPanel { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-3px); } }
+        @keyframes ropeGlow { from { opacity:.55; } to { opacity:.95; } }
+        body.theme-rgb .marquee-wrapper, body.theme-rgb .promo-btn { background-size:300% 300%; animation:rgbFlow 5s ease infinite; }
+        body.theme-rgb .rule-card, body.theme-rgb .section-header h2, body.theme-rgb h1 span { text-shadow:0 0 16px var(--gold-glow); }
+        @keyframes rgbFlow { 0% { background-position:0% 50%; } 50% { background-position:100% 50%; } 100% { background-position:0% 50%; } }
+        body.theme-relax .promo-banner { animation:relaxFloat 8s ease-in-out infinite; }
+        @keyframes relaxFloat { 0%,100% { transform:translateY(0) rotate(0); } 50% { transform:translateY(-2px) rotate(.15deg); } }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+        }
 
         @media (max-width: 480px) {
             h1 { font-size: 2.4rem; }
@@ -360,7 +421,7 @@
         }
     </style>
 </head>
-<body class="theme-gold">
+<body class="theme-boxing">
 
     <div class="ring-decor" aria-hidden="true">
         <div class="canvas-floor"></div>
@@ -381,25 +442,25 @@
             </div>
             <div class="settings-body">
                 <div class="settings-row">
-                    <span class="label">Подсветка</span>
-                    <div class="color-dots" id="colorDots">
-                        <div class="dot-btn dot-gold active" onclick="setTheme('theme-gold', this)" title="Золотой неон"></div>
-                        <div class="dot-btn dot-cyan" onclick="setTheme('theme-cyan', this)" title="Киберпанк синий"></div>
-                        <div class="dot-btn dot-red" onclick="setTheme('theme-red', this)" title="Кровавый красный"></div>
-                        <div class="dot-btn dot-purple" onclick="setTheme('theme-purple', this)" title="Неоновый фиолетовый"></div>
-                        <div class="dot-btn dot-green" onclick="setTheme('theme-green', this)" title="Ринг зелёный"></div>
-                        <div class="dot-btn dot-orange" onclick="setTheme('theme-orange', this)" title="Нокаут оранжевый"></div>
-                        <div class="dot-btn dot-blue" onclick="setTheme('theme-blue', this)" title="Ледяной синий"></div>
-                        <div class="dot-btn dot-pink" onclick="setTheme('theme-pink', this)" title="Неоновый розовый"></div>
+                    <span class="label">Стиль арены</span>
+                    <div class="style-grid" id="styleGrid">
+                        <button class="style-btn style-boxing active" onclick="setTheme('theme-boxing', this)"><span class="style-icon">🥊</span><span class="style-name">Бокс</span><span class="style-sub">Ринг • золото • красный</span></button>
+                        <button class="style-btn style-relax" onclick="setTheme('theme-relax', this)"><span class="style-icon">🌊</span><span class="style-name">Relax</span><span class="style-sub">Спокойный холодный свет</span></button>
+                        <button class="style-btn style-rgb" onclick="setTheme('theme-rgb', this)"><span class="style-icon">🌈</span><span class="style-name">RGB</span><span class="style-sub">Динамический неон</span></button>
+                        <button class="style-btn style-night" onclick="setTheme('theme-night', this)"><span class="style-icon">🌌</span><span class="style-name">Night</span><span class="style-sub">Фиолетовый • кибер</span></button>
+                        <button class="style-btn style-champion" onclick="setTheme('theme-champion', this)"><span class="style-icon">🏆</span><span class="style-name">Champion</span><span class="style-sub">Премиум • пояс • арена</span></button>
                     </div>
                 </div>
                 <div class="settings-row">
                     <span class="label">Свой цвет</span>
-                    <div class="custom-color-row">
-                        <input type="color" class="swatch-native" id="customSwatch" value="#ffb703" oninput="applyCustomColor(this.value)">
-                        <input type="text" class="hex-input" id="customHex" value="#ffb703" maxlength="7" placeholder="#ffb703" oninput="onHexTyped(this.value)">
+                    <div class="custom-color-box">
+                        <div class="custom-color-controls">
+                            <input class="custom-color-input" id="customColor" type="color" value="#ffb703" oninput="syncCustomColor(this.value)">
+                            <input class="custom-hex" id="customHex" type="text" value="#ffb703" maxlength="7" placeholder="#RRGGBB" oninput="syncCustomHex(this.value)">
+                        </div>
+                        <span class="custom-color-hint">Выбери любой цвет для подсветки сайта</span>
+                        <button class="custom-apply" onclick="applyCustomColor()">Применить цвет</button>
                     </div>
-                    <span class="hex-hint" id="hexHint">Введите HEX-код, например #ffb703</span>
                 </div>
                 <div class="settings-row toggle-row">
                     <span class="label">Анимации</span>
@@ -475,6 +536,8 @@
             <a href="#ref" class="nav-link">7. Реферство</a>
             <a href="#disputes" class="nav-link">8. Оспоры</a>
             <a href="#respect" class="nav-link">9. Неуважение</a>
+            <a href="#no-show" class="nav-link">10. Вылеты / Неявка</a>
+            <a href="#title-fights" class="nav-link">11. Титульник / Дивизионы</a>
             <a href="#bans" class="nav-link">Бан стили</a>
         </div>
     </header>
@@ -732,6 +795,114 @@
             </div>
         </section>
 
+        <section id="no-show">
+            <div class="section-header">
+                <div class="header-line"></div>
+                <h2>10. Вылеты / Неявка</h2>
+            </div>
+            <div class="rules-grid">
+                <div class="rule-card danger-card searchable" onclick="copyCardText(this)">
+                    <div class="card-top">
+                        <div class="card-title">10.1 Проблемы со связью и вылеты</div>
+                        <span class="badge-penalty danger">5 минут</span>
+                    </div>
+                    <div class="card-desc">
+                        <span>Если прямо посреди матча у бойца оборвалось соединение или вылетела игра, включается счётчик: у него есть ровно <strong>5 минут</strong> на немедленное возвращение.</span>
+                        <span>Если боец не возвращается в установленный срок, поединок может быть аннулирован либо рефери может присудить <strong>технический нокаут (ТКО)</strong>.</span>
+                    </div>
+                </div>
+
+                <div class="rule-card searchable" onclick="copyCardText(this)">
+                    <div class="card-top">
+                        <div class="card-title">10.2 Неявка обоих бойцов</div>
+                        <span class="badge-penalty warn">10 минут</span>
+                    </div>
+                    <div class="card-desc">
+                        <span>Рефери вправе отменить бой, если <strong>оба бойца не явились в течение 10 минут</strong> с момента начала ожидания.</span>
+                    </div>
+                </div>
+
+                <div class="rule-card searchable" onclick="copyCardText(this)">
+                    <div class="card-top">
+                        <div class="card-title">10.3 Возвращение после выхода из боя</div>
+                        <span class="badge-penalty warn">Отстранение</span>
+                    </div>
+                    <div class="card-desc">
+                        <span>Если один из бойцов покинул бой, но затем вернулся, поединок должен быть продолжен примерно с теми же результатами, которые были до выхода.</span>
+                        <span>При отказе соблюдать это требование рефери вправе назначить <strong>временное отстранение</strong>.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="title-fights">
+            <div class="section-header">
+                <div class="header-line"></div>
+                <h2>11. Титульник / Смена дивизионов</h2>
+            </div>
+            <div class="rules-grid">
+                <div class="rule-card searchable">
+                    <div class="card-top">
+                        <div class="card-title">11.1 Смена дивизиона и путь наверх</div>
+                        <span class="badge-penalty info">Переход</span>
+                    </div>
+                    <div class="card-desc">
+                        <span>При сильном доминировании администрация может принудительно перевести бойца в более высокий дивизион.</span>
+                        <span>В обычном порядке для перехода наверх необходимо завоевать чемпионский пояс текущего дивизиона и провести минимум <strong>одну успешную защиту</strong>.</span>
+                        <span>Если боец прошёл в дивизион по рангу, но не способен показывать там результат, он может быть возвращён на ступень ниже. Данное правило <strong>временно не применяется к H.C.L</strong>.</span>
+                        <span>Если рейтинг бойца достиг необходимого значения для следующего дивизиона, он может попросить о переводе. Если рефери видят, что рейтинг уже соответствует нужному дивизиону, они вправе перевести бойца без дополнительных переговоров.</span>
+                    </div>
+                </div>
+
+                <div class="rule-card searchable">
+                    <div class="card-top">
+                        <div class="card-title">11.2 Защита титула чемпиона</div>
+                        <span class="badge-penalty info">Регламент</span>
+                    </div>
+                    <div class="card-desc">
+                        <span>🟢 <strong>H.C.L:</strong> защита титула — каждую неделю.</span>
+                        <span>🟡 <strong>T.C.L:</strong> защита титула — каждые 2 недели.</span>
+                        <span>🟠 <strong>O.C.L:</strong> защита титула — каждые 2,5 недели.</span>
+                    </div>
+                </div>
+
+                <div class="rule-card searchable">
+                    <div class="card-top">
+                        <div class="card-title">11.3 Формат титульных боёв</div>
+                        <span class="badge-penalty info">BO3</span>
+                    </div>
+                    <div class="card-desc">
+                        <span>Титульные противостояния проводятся в формате <strong>BO3 — до двух побед (3 боя максимум)</strong>.</span>
+                        <span>Игрок может сменить стиль только после поражения. Победитель обязан сохранять текущий стиль до своего проигрыша.</span>
+                        <span>Остальные правила проведения боя остаются такими же, как в обычных боях.</span>
+                    </div>
+                </div>
+
+                <div class="rule-card searchable">
+                    <div class="card-top">
+                        <div class="card-title">11.4 Наблюдение и фолы</div>
+                        <span class="badge-penalty warn">Контроль</span>
+                    </div>
+                    <div class="card-desc">
+                        <span>За титульным боем наблюдает один рефери высшей категории (<strong>главный рефери</strong>) либо <strong>два рефери обычной категории</strong>.</span>
+                        <span>После каждого боя (не каждого раунда) счётчик фолов <strong>аннулируется</strong>.</span>
+                        <span>В зависимости от количества и характера фолов рефери вправе изменить итог конкретного боя.</span>
+                    </div>
+                </div>
+
+                <div class="rule-card danger-card searchable">
+                    <div class="card-top">
+                        <div class="card-title">11.5 Право на вызов чемпиона</div>
+                        <span class="badge-penalty danger">ТОП-5</span>
+                    </div>
+                    <div class="card-desc">
+                        <span>Бросить вызов действующему чемпиону могут только бойцы из <strong>Топ-5 рейтинга</strong> своего дивизиона.</span>
+                        <span><strong>Топ-1</strong> получает эксклюзивную привилегию: чемпион обязан принять его вызов безоговорочно.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="bans">
             <div class="section-header">
                 <div class="header-line"></div>
@@ -854,66 +1025,51 @@
         }
         spawnParticles();
 
-        const themeClasses = ['theme-gold', 'theme-cyan', 'theme-red', 'theme-purple', 'theme-green', 'theme-orange', 'theme-blue', 'theme-pink', 'theme-custom'];
-
-        function clearInlineTheme() {
-            document.body.style.removeProperty('--gold');
-            document.body.style.removeProperty('--gold-glow');
-            document.body.style.removeProperty('--border-grid');
-        }
+        const themeClasses = ['theme-boxing', 'theme-relax', 'theme-rgb', 'theme-night', 'theme-champion', 'theme-custom'];
 
         function setTheme(themeName, element) {
-            clearInlineTheme();
             themeClasses.forEach(t => document.body.classList.remove(t));
             document.body.classList.add(themeName);
-            document.querySelectorAll('.dot-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.style-btn').forEach(btn => btn.classList.remove('active'));
             if (element) element.classList.add('active');
             localStorage.setItem('ocl_theme', themeName);
-            localStorage.removeItem('ocl_custom_color');
         }
 
-        function hexToRgb(hex) {
-            const m = /^#?([a-f\d]{3}|[a-f\d]{6})$/i.exec(hex.trim());
-            if (!m) return null;
-            let h = m[1];
-            if (h.length === 3) h = h.split('').map(c => c + c).join('');
-            const num = parseInt(h, 16);
-            return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+        function normalizeHex(value) {
+            value = String(value || '').trim();
+            if (!value.startsWith('#')) value = '#' + value;
+            return /^#[0-9a-fA-F]{6}$/.test(value) ? value.toLowerCase() : null;
         }
-
-        function applyCustomColor(hex) {
-            const rgb = hexToRgb(hex);
-            if (!rgb) return;
-            const normalized = '#' + [rgb.r, rgb.g, rgb.b].map(v => v.toString(16).padStart(2, '0')).join('');
-
+        function hexRgb(hex) {
+            const n = parseInt(hex.slice(1), 16);
+            return { r:(n>>16)&255, g:(n>>8)&255, b:n&255 };
+        }
+        function applyCustomHex(hex) {
+            const rgb = hexRgb(hex);
+            document.body.style.setProperty('--gold', hex);
+            document.body.style.setProperty('--gold-glow', `rgba(${rgb.r},${rgb.g},${rgb.b},.48)`);
+            document.body.style.setProperty('--border-grid', `rgba(${rgb.r},${rgb.g},${rgb.b},.20)`);
+            document.body.style.setProperty('--accent-2', hex);
+            document.body.style.setProperty('--accent-3', hex);
+            document.body.style.setProperty('--gold-r', rgb.r);
+            document.body.style.setProperty('--gold-g', rgb.g);
+            document.body.style.setProperty('--gold-b', rgb.b);
             themeClasses.forEach(t => document.body.classList.remove(t));
             document.body.classList.add('theme-custom');
-            document.body.style.setProperty('--gold', normalized);
-            document.body.style.setProperty('--gold-glow', `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`);
-            document.body.style.setProperty('--border-grid', `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15)`);
-
-            document.querySelectorAll('.dot-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('customSwatch').value = normalized;
-            document.getElementById('customHex').value = normalized;
-            document.getElementById('customHex').classList.remove('invalid');
-            document.getElementById('hexHint').textContent = 'Применён свой цвет ' + normalized;
-
-            localStorage.setItem('ocl_custom_color', normalized);
+            document.querySelectorAll('.style-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('customColor').value = hex;
+            document.getElementById('customHex').value = hex;
+            localStorage.setItem('ocl_custom_color', hex);
             localStorage.setItem('ocl_theme', 'theme-custom');
         }
-
-        function onHexTyped(value) {
-            const hint = document.getElementById('hexHint');
-            const input = document.getElementById('customHex');
-            let v = value.trim();
-            if (v && !v.startsWith('#')) v = '#' + v;
-            if (hexToRgb(v)) {
-                input.classList.remove('invalid');
-                applyCustomColor(v);
-            } else {
-                input.classList.add('invalid');
-                hint.textContent = 'Неверный формат. Пример: #ffb703';
-            }
+        function syncCustomColor(value) { document.getElementById('customHex').value = value; }
+        function syncCustomHex(value) {
+            const hex = normalizeHex(value);
+            if (hex) document.getElementById('customColor').value = hex;
+        }
+        function applyCustomColor() {
+            const hex = normalizeHex(document.getElementById('customHex').value);
+            if (hex) applyCustomHex(hex);
         }
 
         function toggleSettings(force) {
@@ -938,17 +1094,17 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('ocl_theme');
             const savedCustom = localStorage.getItem('ocl_custom_color');
-
-            if (savedTheme === 'theme-custom' && savedCustom) {
-                applyCustomColor(savedCustom);
-            } else if (savedTheme && themeClasses.includes(savedTheme)) {
+            if (savedCustom && normalizeHex(savedCustom)) {
+                applyCustomHex(normalizeHex(savedCustom));
+            }
+            const savedTheme = localStorage.getItem('ocl_theme');
+            if (savedTheme && savedTheme !== 'theme-custom' && themeClasses.includes(savedTheme)) {
                 themeClasses.forEach(t => document.body.classList.remove(t));
                 document.body.classList.add(savedTheme);
-                document.querySelectorAll('.dot-btn').forEach(btn => btn.classList.remove('active'));
-                const activeDot = document.querySelector(`[onclick*="'${savedTheme}'"]`);
-                if (activeDot) activeDot.classList.add('active');
+                document.querySelectorAll('.style-btn').forEach(btn => btn.classList.remove('active'));
+                const activeStyle = document.querySelector(`[onclick*="'${savedTheme}'"]`);
+                if (activeStyle) activeStyle.classList.add('active');
             }
 
             const savedMotion = localStorage.getItem('ocl_motion');
@@ -976,6 +1132,17 @@
             updateActiveNav();
         };
         updateActiveNav();
+
+        const revealTargets = document.querySelectorAll('.section-header, .promo-banner, .status-badge, .rule-card, .ban-box, footer');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: .08 });
+        revealTargets.forEach(el => { el.classList.add('reveal-ready'); revealObserver.observe(el); });
     </script>
 </body>
 </html>
