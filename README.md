@@ -569,7 +569,7 @@
                 </div>
                 <div class="rule-card danger-card searchable" onclick="copyCardText(this)">
                     <div class="card-top"><div class="card-title">1.3 Два ПД подряд</div><span class="badge-penalty warn">Фол</span></div>
-                    <div class="card-desc"><span>Если вы делаете 2 ПД подряд, не начав атаку самостоятельно, даже если уложились в тайминг, за это даётся фол.</span></div>
+                    <div class="card-desc"><span>Если вы делаете 3 ПД подряд, не начав атаку самостоятельно, даже если уложились в тайминг, за это даётся фол.</span></div>
                 </div>
             </div>
         </section>
