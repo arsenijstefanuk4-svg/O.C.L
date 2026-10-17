@@ -858,6 +858,7 @@
                 <div class="ban-box searchable">deimos</div>
                 <div class="ban-box searchable">hitman</div>
                 <div class="ban-box searchable">all shinies</div>
+                <div class="ban-box searchable">gradonfish</div>
                 <div class="ban-box searchable">exclusive styles</div>
             </div>
         </section>
