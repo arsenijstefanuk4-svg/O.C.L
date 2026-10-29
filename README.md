@@ -729,11 +729,9 @@ body::before,body::after{display:none !important;}
 <div class="ban-box searchable">hawk</div>
 <div class="ban-box searchable">white ash</div>
 <div class="ban-box searchable">shotgun</div>
-<div class="ban-box searchable">wolf</div>
 <div class="ban-box searchable">switch hit (без сбития ульты)</div>
 <div class="ban-box searchable">chronos</div>
 <div class="ban-box searchable">bullet</div>
-<div class="ban-box searchable">supernova</div>
 <div class="ban-box searchable">deimos</div>
 <div class="ban-box searchable">hitman</div>
 <div class="ban-box searchable">all shinies</div>
