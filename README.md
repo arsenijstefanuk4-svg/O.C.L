@@ -730,9 +730,9 @@ body::before,body::after{display:none !important;}
 <div class="ban-box searchable">white ash</div>
 <div class="ban-box searchable">shotgun</div>
 <div class="ban-box searchable">switch hit (без сбития ульты)</div>
-<div class="ban-box searchable">chronos разбанен, но фармить способность на Chronos запрещено</div>
+<div class="ban-box searchable">chronos разбанен, но фармить способность с помощью эмоций запрещено</div>
 <div class="ban-box searchable">bullet</div>
-<div class="ban-box searchable">Hammer</div>
+<div class="ban-box searchable">hammer</div>
 <div class="ban-box searchable">deimos</div>
 <div class="ban-box searchable">hitman</div>
 <div class="ban-box searchable">all shinies</div>
