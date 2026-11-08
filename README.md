@@ -737,6 +737,8 @@ body::before,body::after{display:none !important;}
 <div class="ban-box searchable">hitman</div>
 <div class="ban-box searchable">all shinies</div>
 <div class="ban-box searchable">gradonfish</div>
+<div class="ban-box searchable">charge</div>
+<div class="ban-box searchable">basic</div>
 <div class="ban-box searchable">exclusive styles</div>
 </div>
 </section>
