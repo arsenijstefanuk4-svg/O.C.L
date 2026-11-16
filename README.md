@@ -517,10 +517,15 @@ body::before,body::after{display:none !important;}
 </div>
 </div>
 <div class="rule-card searchable" onclick="copyCardText(this)">
-<div class="card-top"><div class="card-title">4.2 Условия разрешения</div><span class="badge-penalty warn">Пред ➜ Фол</span></div>
-<div class="card-desc">
-<span>Скейт и БД разрешены, если по сопернику сделали один любой удар или серию. За первое нарушение — устное предупреждение, последующие — фол.</span>
-</div>
+    <div class="card-top">
+        <div class="card-title">4.2 Скейт и БД разрешены</div>
+        <span class="badge-penalty warn">Пред ➜ Фол</span>
+    </div>
+    <div class="card-desc">
+        <span>Скейт и БД разрешены, если по сопернику сделали один любой удар или же серию, при этом нужно будет попасть по оппоненту.</span>
+        <span>БД, сделанное во время удара оппонента, допускается 1 раз за бой.</span>
+        <span>Первое нарушение влечёт устное предупреждение, последующие — фол.</span>
+    </div>
 </div>
 <div class="rule-card searchable" onclick="copyCardText(this)">
 <div class="card-top"><div class="card-title">4.3 Против Демпси и Шотгана</div><span class="badge-penalty info">Особые правила</span></div>
